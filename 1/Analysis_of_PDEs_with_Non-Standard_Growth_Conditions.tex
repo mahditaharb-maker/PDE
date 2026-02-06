@@ -1,0 +1,1854 @@
+\documentclass{amsart}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{anyfontsize}
+\usepackage{fancyhdr}
+\usepackage{environ}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{newtxtext, newtxmath} 
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{bm}  % For bold math
+\usepackage{etoolbox}  % For AtBeginDocument
+\newcommand{\mysize}[1]{{\fontsize{#1}{#1*1.2}\selectfont}}
+% Load hyperref last (except for cleveref)
+\usepackage[colorlinks=true,
+citecolor=red,
+urlcolor=blue]{hyperref}
+
+% Remove breqn package to avoid conflicts with newtxmath
+% \usepackage{breqn}
+
+\newcommand{\lo}{\lowercase} 
+\newcommand{\up}{\uppercase}
+
+% ============================================
+% TABLE AND PROOF FORMATTING
+% ============================================
+\newcolumntype{S}{>{\raggedright\arraybackslash}p{0.75\textwidth}}
+\newcolumntype{J}{>{\raggedright\arraybackslash}p{0.25\textwidth}}
+
+\newenvironment{prooftable}
+{%
+	\setlength{\LTpre}{0pt}%
+	\setlength{\LTpost}{0pt}%
+	\noindent
+	\renewcommand{\arraystretch}{1.3}%
+	\begin{longtable}{r S J}%
+		\textbf{Step} & \textbf{Statement} & \textbf{Justification} \\
+		\endfirsthead
+		\textbf{Step} & \textbf{Statement} & \textbf{Justification} \\
+		\endhead
+		\multicolumn{3}{r}{\textit{Continued on next page}} \\
+		\endfoot
+		\endlastfoot
+	}
+	{%
+	\end{longtable}%
+}
+\NewEnviron{autoscale}[1][0.95\linewidth]{%
+	\begin{equation*}
+	\resizebox{#1}{!}{$\BODY$}
+	\end{equation*}
+}
+
+% ============================================
+% DOCUMENT SETTINGS
+% ============================================
+\setcounter{MaxMatrixCols}{20}
+\setlength{\abovedisplayskip}{12pt}
+\setlength{\belowdisplayskip}{12pt}
+\setlength{\abovedisplayshortskip}{6pt}
+\setlength{\belowdisplayshortskip}{6pt}
+\setlength{\jot}{10pt}
+\raggedbottom
+
+\makeatletter
+\@namedef{subjclassname@2020}{
+	\textup{2025} Mathematics Subject Classification
+}
+\makeatother
+
+
+\renewenvironment{proof}[1][Proof]{
+	\par\noindent\textbf{#1.}\par }{
+	\hfill$\square$\par           }
+\newtheoremstyle{break}
+{12pt}{12pt}{\normalfont}{}{\bfseries}{.}{\newline}{}
+\theoremstyle{break}
+% Theorem environments - already bold
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% ============================================
+% FONT AND SPACING SETTINGS (16pt, 1.5 spacing, ALL BOLD)
+% ============================================
+% Set entire document to 16pt font
+\renewcommand{\normalsize}{\fontsize{16}{24}\selectfont\bfseries}
+
+% Force 1.5 line spacing throughout
+\onehalfspacing
+
+% Make ALL text bold (including body text)
+\renewcommand{\seriesdefault}{\bfdefault}
+\renewcommand{\mddefault}{b}
+
+% Apply bold to all text elements
+\AtBeginDocument{%
+	\bfseries
+	\boldmath % Make math symbols bold too
+}
+
+% ============================================
+% SECTION FORMATTING (BOLD)
+% ============================================
+% Proportional sizes based on 16pt main font
+\titleformat{\section}
+{\normalfont\fontsize{19.2}{23}\selectfont\bfseries\color{blue}}  % 1.2× larger
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\fontsize{17.6}{21.1}\selectfont\bfseries\color{teal}}  % 1.1× larger
+{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\fontsize{16}{19.2}\selectfont\bfseries\color{violet}}  % same size
+{\thesubsubsection}{1em}{}
+
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{10pt}{10pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+% Make captions bold
+\usepackage{caption}
+\captionsetup{font=bf}
+
+% Make list items bold
+\setlist[itemize]{font=\bfseries}
+\setlist[enumerate]{font=\bfseries}
+
+% ============================================
+% TABLE OF CONTENTS (BOLD)
+% ============================================
+\makeatletter
+\renewcommand{\l@section}{\@tocline{1}{1em}{1em}{2em}{\bfseries}}
+\renewcommand{\l@subsection}{\@tocline{1}{1em}{3em}{2em}{\bfseries}}
+\renewcommand{\l@subsubsection}{\@tocline{1}{1em}{5em}{2em}{\bfseries}}
+\makeatother
+
+% ============================================
+% METADATA
+% ============================================
+\subjclass[2020]{35J60, 35J92, 46E30, 35K55, 35R35}
+
+\subjclass[2020]{
+	35J60 (Nonlinear elliptic equations), 
+	35J92 (Quasilinear elliptic equations), 
+	46E30 (Sobolev and Orlicz spaces), 
+	35K55 (Nonlinear parabolic equations), 
+	35R35 (Free boundary problems),
+	76A05 (Non-Newtonian fluids)
+}
+
+\keywords{
+	Variable exponent spaces, $p(x)$-Laplacian, Non-standard growth, 
+	Log-H\"older continuity, Sobolev embeddings, Electrorheological fluids
+}
+
+\title{\textbf{\lo{\up{A}nalysis of \up{PDE}s with \up{N}on-\up{S}tandard \up{G}rowth \up{C}onditions}}}
+
+\author{%
+	\textbf{\fontsize{12}{14}\selectfont
+		b\lo{rahimi}, m\lo{ahdi}. t\lo{ahar}. \\[1pt]
+		\\[1pt]
+		{d\lo{epartment of} m\lo{athematics}} \\[1pt]
+		\\[1pt]
+		{u\lo{niversity of} m\lo{ohamed} b\lo{oudiaf}, m\lo{sila}, a\lo{lgeria}} \\[1pt] \\[1pt]
+		{\texttt{\href{mailto:mahdi.brahimi@univ-msila.dz}{%
+					\lo{mahditahar.brahimi@univ-msila.dz}}}}%
+	}%
+}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+% ============================================
+% PAGE LAYOUT
+% ============================================
+\usepackage[margin=0.8in]{geometry}
+% Fix fancyhdr warning about footskip
+\setlength{\footskip}{15pt}
+
+% Fancyhdr setup
+\fancyhf{} % Clear all header/footer fields
+\renewcommand{\headrulewidth}{0pt} % Remove header line
+\fancyfoot[C]{\Large\bfseries\thepage} % Large bold page numbers centered
+
+\pagestyle{fancy}
+
+% Code listing setup - ASCII only version (also bold)
+\lstdefinestyle{pythonstyle}{
+	language=Python,
+	basicstyle=\ttfamily\bfseries\footnotesize,
+	keywordstyle=\color{blue}\bfseries,
+	commentstyle=\color{green!50!black}\bfseries,
+	stringstyle=\color{red}\bfseries,
+	showstringspaces=false,
+	breaklines=true,
+	frame=single,
+	numbers=left,
+	numberstyle=\tiny\color{gray}\bfseries,
+	tabsize=4,
+	captionpos=b,
+	literate={λ}{{$\boldsymbol{\lambda}$}}1 
+	{ρ}{{$\boldsymbol{\rho}$}}1 
+	{∇}{{$\boldsymbol{\nabla}$}}1 
+	{≈}{{$\boldsymbol{\approx}$}}1
+}
+
+% ============================================
+% SMART BREAKING ENVIRONMENT
+% ============================================
+\NewDocumentEnvironment{smartbreak}{}
+{\begin{dmath*}[breakdepth=0, style={\displaystyle}]}
+	{\end{dmath*}}
+
+\NewDocumentCommand{\inlinebreak}{m}{%
+	\begingroup
+	\def\+{\penalty0\relax\allowbreak+}%
+	\def\-{\penalty0\relax\allowbreak-}%
+	\def\={\penalty0\relax\allowbreak=}%
+	\def\,{\penalty0\relax\allowbreak,}%
+	#1%
+	\endgroup
+}
+
+% Make rract bold
+\let\oldabstract\abstract
+\let\endoldabstract\endabstract
+\renewenvironment{abstract}
+{\oldabstract\bfseries}
+{\endoldabstract}
+
+% Make table text bold
+\AtBeginEnvironment{tabular}{\bfseries}
+\AtBeginEnvironment{longtable}{\bfseries}
+
+% Redefine abstract environment
+\renewenvironment{abstract}{
+	\begin{center}
+		\bfseries\fontsize{14}{16}\selectfont Abstract
+	\end{center}
+	\fontsize{12}{14}\selectfont % <-- custom size here
+}{}
+\begin{document}
+	
+	% Title page
+	\maketitle
+	\thispagestyle{empty}
+\vspace{1in}
+	
+	
+	\begin{abstract}
+	\text{ }	\newline
+	This  draft provides a concise overview of Lebesgue and Sobolev spaces with variable exponents $L^{p(\cdot)}(\Omega)$ and $W^{k,p(\cdot)}(\Omega)$, their fundamental properties, and applications to partial differential equations. Key topics include the Luxemburg norm, modular functionals, essential boundedness conditions ($p^-$, $p^+$), and the critical log-H\"older continuity condition for Sobolev embeddings. Applications focus on the $p(x)$-Laplace equation and related elliptic/parabolic problems arising in non-Newtonian fluid dynamics, image processing, and materials with spatially varying properties.
+\end{abstract}
+	\newpage
+	
+	% Table of Contents
+	\setstretch{0.8}
+	\tableofcontents{\thispagestyle{empty}}
+	\setstretch{1.5}
+	\newpage
+	
+	% Reset page counter
+	\setcounter{page}{1}
+	\pagestyle{fancy}
+	
+	\section{Introduction}\label{sec:intro}
+	Variable exponent function spaces generalize classical Lebesgue and Sobolev spaces by allowing the exponent $p$ to vary as a measurable function $p(x):\Omega\to[1,\infty)$. This framework models physical phenomena with spatially dependent nonlinearities, such as electrorheological fluids where viscosity depends on an electric field.\\ The mathematical theory requires careful treatment of modular convergence, non-uniform ellipticity, and degenerate/singular behavior.\\ This work summarizes essential definitions, key theorems, and applications to $p(x)$-Laplace equations.
+	
+	\section{Core Definitions}\label{sec:definitions}
+	
+	\begin{definition}[Variable Exponent]\label{def:var-exp}
+		A measurable function $p: \Omega \to [1, \infty)$ is called a variable exponent.
+	\end{definition}
+	
+	\begin{definition}[Bounds]\label{def:bounds}
+		For a variable exponent $p$, define:
+		\[
+		 p^- = \operatorname{ess}\inf\limits_{x\in\Omega} p(x), \quad p^+ = \operatorname{ess}\sup\limits_{x\in\Omega} p(x)
+		\]
+	\end{definition}
+	
+	\begin{definition}[Modular]\label{def:modular}
+		The modular functional $$\rho_{p(\cdot)}:\,  L^{p(\cdot)}(\Omega) \to [0,\infty]$$ is defined by:
+		\[
+		\rho_{p(\cdot)}(f) = \int_\Omega |f(x)|^{p(x)} dx
+		\]
+	\end{definition}
+	
+	\begin{definition}[Lebesgue Space]\label{def:lebesgue-space}
+		The variable exponent Lebesgue space is:
+		\[
+		L^{p(\cdot)}(\Omega) = \{ f : \exists\lambda>0, \rho_{p(\cdot)}(f/\lambda) < \infty \}
+		\]
+	\end{definition}
+	
+	\begin{definition}[Luxemburg Norm]\label{def:luxemburg-norm}
+		The Luxemburg norm is defined as:
+		\[
+		\|f\|_{p(\cdot)} = \inf\{ \lambda > 0 : \rho_{p(\cdot)}(f/\lambda) \leq 1 \}
+		\]
+	\end{definition}
+	
+	\begin{definition}[Sobolev Space]\label{def:sobolev-space}
+		The variable exponent Sobolev space is:
+		\[
+		W^{k,p(\cdot)}(\Omega) = \{ f \in L^{p(\cdot)} : D^\alpha f \in L^{p(\cdot)}, |\alpha| \leq k \}
+		\]
+		with norm $\|f\|_{W^{k,p(\cdot)}} = \sum\limits_{|\alpha|\leq k} \|D^\alpha f\|_{p(\cdot)}$
+	\end{definition}
+	
+	\section{Key Properties}\label{sec:properties}
+	
+	\begin{theorem}[Completeness]\label{thm:completeness}
+		$L^{p(\cdot)}(\Omega)$ is a Banach space under the Luxemburg norm.
+	\end{theorem}
+	
+	\begin{theorem}[Reflexivity]\label{thm:reflexivity}
+		If $1 < p^- \leq p^+ < \infty$, then $L^{p(\cdot)}(\Omega)$ is reflexive.
+	\end{theorem}
+	
+	\begin{theorem}[Separability]\label{thm:separability}
+		If $p^+ < \infty$, then $L^{p(\cdot)}(\Omega)$ is separable.
+	\end{theorem}
+	
+	\begin{theorem}[Generalized Hölder Inequality]\label{thm:holder}
+		Let $p, q, s: \Omega \to [1,\infty]$ be measurable with $\frac{1}{s(x)} = \frac{1}{p(x)} + \frac{1}{q(x)}$ a.e. \\ For $f \in L^{p(\cdot)}(\Omega)$, $g \in L^{q(\cdot)}(\Omega)$, we have:
+		\[
+		\|fg\|_{s(\cdot)} \leq 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}
+		\]
+	\end{theorem}
+	
+	\section{Essential Conditions}\label{sec:conditions}
+	
+	\begin{definition}[Log-Hölder Continuity]\label{def:log-holder}
+		A variable exponent $p$ is log-Hölder continuous if:
+	\[
+	\forall x, y \in \Omega, \quad |p(x) - p(y)| \le \frac{C}{\log\!\big(e + 1/|x-y|\big)}.
+	\]
+	\end{definition}
+	
+	\begin{theorem}[Sobolev Embedding]\label{thm:sobolev-embedding}
+		If $p$ is log-Hölder continuous and $1 < p^- \leq p^+ < n$, then:
+		\[
+		W^{1,p(\cdot)}(\Omega) \hookrightarrow L^{p^*(\cdot)}(\Omega)
+		\]
+		where $\frac{1}{p^*(x)} = \frac{1}{p(x)} - \frac{1}{n}$.
+	\end{theorem}
+	
+	\section{Elliptic Equations}\label{sec:elliptic}
+	
+	\subsection*{$p(x)$-Laplace Equation}\label{subsec:p-laplace}
+	
+	\begin{equation}\label{eq:p-laplace}
+	\begin{aligned}
+	-\Delta_{p(x)} u &= f \quad \text{in } \Omega \\
+	u &= 0 \quad \text{on } \partial\Omega
+	\end{aligned}
+	\end{equation}
+	where $\Delta_{p(x)} u = \text{div}(|\nabla u|^{p(x)-2} \nabla u)$.
+	
+	\begin{definition}[Weak Formulation]\label{def:weak-form}
+		Find $u \in W^{1,p(\cdot)}_0(\Omega)$ such that for all $v \in W^{1,p(\cdot)}_0(\Omega)$:
+		\[
+		\int_\Omega |\nabla u|^{p(x)-2} \nabla u \cdot \nabla v  dx = \int_\Omega f v  dx
+		\]
+	\end{definition}
+	
+	\begin{definition}[Energy Functional]\label{def:energy}
+		\[
+		J(u) = \int_\Omega \frac{1}{p(x)} |\nabla u|^{p(x)}  dx - \int_\Omega f u  dx
+		\]
+	\end{definition}
+	
+	\subsection*{Existence \& Regularity}\label{subsec:existence-regularity}
+	
+	\begin{theorem}[Existence]\label{thm:existence}
+		If $p$ is log-Hölder continuous, $1 < p^- \leq p^+ < \infty$, and $f \in L^{p'(\cdot)}(\Omega)$, then \eqref{eq:p-laplace} has a weak solution.
+	\end{theorem}
+	
+	\begin{theorem}[Regularity]\label{thm:regularity}
+		Under additional conditions, weak solutions $u \in C^{1,\alpha}(\Omega)$.
+	\end{theorem}
+	
+	\begin{theorem}[Uniqueness]\label{thm:uniqueness}
+		The solution is unique if either $p(x) \geq 2$ or $1 < p(x) \leq 2$ uniformly.
+	\end{theorem}
+	
+	\subsection*{Eigenvalue Problem}\label{subsec:eigenvalue}
+	
+	\begin{equation}\label{eq:eigenvalue}
+	-\Delta_{p(x)} u = \lambda |u|^{p(x)-2} u
+	\end{equation}
+	
+	\begin{theorem}[First Eigenvalue]\label{thm:first-eigenvalue}
+		The first eigenvalue is:
+		\[
+		\lambda_1 = \inf\left\{ \frac{\int_\Omega |\nabla u|^{p(x)} dx}{\int_\Omega |u|^{p(x)} dx} : u \in W^{1,p(\cdot)}_0(\Omega)\setminus\{0\} \right\}
+		\]
+		and is attained by a positive function $u_1$.
+	\end{theorem}
+	
+	\section{Parabolic Equations}\label{sec:parabolic}
+	
+	\subsection*{$p(x)$-Heat Equation}\label{subsec:p-heat}
+	
+	\begin{equation}\label{eq:p-heat}
+	\begin{aligned}
+	u_t - \Delta_{p(x)} u &= f(x,t) \quad \text{in } \Omega \times (0,T) \\
+	u &= 0 \quad \text{on } \partial\Omega \times (0,T) \\
+	u(x,0) &= u_0(x) \quad \text{in } \Omega
+	\end{aligned}
+	\end{equation}
+	
+	\begin{theorem}[Finite-Time Extinction]\label{thm:extinction}
+		For $p^- < 2$, solutions of \eqref{eq:p-heat} with $f=0$ vanish in finite time.
+	\end{theorem}
+	
+	\section{Recent Developments}\label{sec:recent}
+	\begin{itemize}
+		\setlength\itemsep{0pt}
+		\item Calderón-Zygmund theory for variable exponents
+		\item Free boundary problems with non-standard growth
+		\item Numerical methods for $p(x)$-PDEs
+		\item Fractional $p(x)$-Laplacians
+		\item Stochastic versions of variable exponent PDEs
+	\end{itemize}
+	
+	\section{Conclusion}\label{sec:conclusion}
+	Variable exponent spaces provide a versatile framework for modeling materials with non-standard growth properties. The $p(x)$-Laplacian exhibits rich mathematical behavior degenerate when $p(x)>2$, singular when $1<p(x)<2$ with applications spanning fluid dynamics, image restoration, and porous media flow. Fundamental challenges include establishing regularity, compactness, and well-posedness under log-Hölder continuity conditions.
+	
+	\addtocontents{toc}{\protect\setcounter{tocdepth}{-10}}
+	\appendix
+	\section*{Appendices}\label{sec:appendices}
+	\addcontentsline{toc}{section}{Appendices}
+	
+	
+\section{Glossary of Symbols and Definitions}\label{sec:glossary}
+\subsection{Matrix Groups}
+
+\begin{itemize}
+	\item Orthogonal group: \\ \vspace{-0.5in} $$O(n) \coloneqq \{ R \in \mathbb{R}^{n \times n} : R^\top R = I_n \}$$ 
+	\item Special orthogonal group, ()rotations only):
+	\\ \vspace{-0.5in} $$SO(n) \coloneqq \{ R \in O(n) : \det(R) = 1 \}$$ 
+	\item  Unitary group:\\  \vspace{-0.5in}
+	$$U(n) \coloneqq \{ U \in \mathbb{C}^{n \times n} : U^*U = I_n \}$$ 
+	\item General linear group:\\ \vspace{-0.5in}
+	$$GL(n,\mathbb{R}) \coloneqq \{ A \in \mathbb{R}^{n \times n} : \det(A) \neq 0 \}$$ 
+	\item $O(n)$ preserves the Euclidean norm: 
+	$$\forall R\in O(n),\, \forall x \in \mathbb{R}^n: \quad \|Rx\|_2 = \|x\|_2 $$
+	\item $O(n)$ preserves the inner product: $\langle Rx, Ry \rangle = \langle x, y \rangle$
+	\item $\det(R) = \pm 1$ for all $R \in O(n)$
+	\item $SO(n)$ is the connected component of $O(n)$ containing the identity
+	\item $O(n)$ is a compact Lie group of dimension $\frac{n(n-1)}{2}$
+\end{itemize}
+\subsection{Basic Set and Topological Notations}
+\vspace{-0.5in}
+\begin{itemize}
+	\item $\Omega \subset \mathbb{R}^n$: A subset of Euclidean space.\fontsize{15.5}{1.2\baselineskip}\selectfont
+	\item $B_\epsilon(x) \coloneqq \{y \in \mathbb{R}^n : |y-x| < \epsilon\}$: Open ball of radius $\epsilon$ centered at $x$.\normalsize
+	\item $\operatorname{open}(\Omega) \coloneqq \forall x \in \Omega,\ \exists \epsilon>0 : B_\epsilon(x) \subset \Omega$.
+	\item $\operatorname{closed}(\Omega) \coloneqq \mathbb{R}^n \setminus \Omega \text{ open}$.
+	\item $\operatorname{bounded}(\Omega) \coloneqq \exists R>0 : \Omega \subset B_R(0)$.
+	\item $\operatorname{unbounded}(\Omega) \coloneqq \neg \operatorname{bounded}(\Omega)$.
+	\item $\operatorname{diam}(\Omega) \coloneqq \sup\{|x-y| : x,y \in \Omega\}$.
+	\item $\operatorname{connected}(\Omega) \coloneqq \forall x,y \in \Omega,\ \exists \gamma:[0,1]\to\Omega,\ \gamma(0)=x,\ \gamma(1)=y$.
+	\item $\operatorname{path-connected}(\Omega) \coloneqq \operatorname{connected}(\Omega)$.
+	\item $\operatorname{simply connected}(\Omega) \coloneqq \operatorname{connected}(\Omega) \land \pi_1(\Omega) = 0$.
+	\item $\operatorname{convex}(\Omega) \coloneqq \forall x,y \in \Omega,\ \forall t\in[0,1],\ (1-t)x + ty \in \Omega$.
+	\item $\operatorname{star-shaped}(\Omega) \coloneqq \exists x_0 \in \Omega,\ \forall x \in \Omega,\ \forall t\in[0,1],\ (1-t)x_0 + tx \in \Omega$.
+	\item $\operatorname{radially symmetric}(\Omega) \coloneqq \forall x \in \Omega,\ \forall O \in O(n),\ Ox \in \Omega$.
+	\item $\operatorname{annular}(\Omega) \coloneqq \exists 0<r<R,\ \Omega = B_R(0) \setminus \overline{B_r(0)}$.
+	\item $\operatorname{exterior domain}(\Omega) \coloneqq \exists R>0,\ \Omega = \mathbb{R}^n \setminus \overline{B_R(0)}$.
+	\item $\operatorname{compact}(\Omega) \coloneqq \Omega \text{ closed} \land \Omega \text{ bounded}$ (in $\mathbb{R}^n$).
+	\item $\operatorname{domain}(\Omega) \coloneqq \operatorname{open}(\Omega) \land \operatorname{connected}(\Omega)$.
+\end{itemize}
+
+\subsection{Boundary and Closure}
+\begin{itemize}
+	\item $\partial\Omega \coloneqq \{ x \in \mathbb{R}^n : \forall \epsilon>0,\ B_\epsilon(x) \cap \Omega \neq \emptyset \land B_\epsilon(x) \cap (\mathbb{R}^n \setminus \Omega) \neq \emptyset \}$.
+	\item $\overline{\Omega} \coloneqq \Omega \cup \partial\Omega$.
+	\item $\Omega^\circ \coloneqq \Omega \setminus \partial\Omega$ (interior).
+	\item $\operatorname{closure}(\Omega) \coloneqq \overline{\Omega}$.
+	\item $\operatorname{boundary}(\Omega) \coloneqq \partial\Omega$.
+	\item $\operatorname{interior}(\Omega) \coloneqq \Omega^\circ$.
+	\item $\operatorname{exterior}(\Omega) \coloneqq \mathbb{R}^n \setminus \overline{\Omega}$.
+\end{itemize}
+
+\subsection{Measure and Integration}
+\begin{itemize}
+	\item $\mathcal{B}(\mathbb{R}^n) \coloneqq \sigma(\mathcal{O})$, where $\mathcal{O} \coloneqq \{U \subset \mathbb{R}^n : U \text{ open}\}$ (Borel $\sigma$-algebra).
+	\item $\mathcal{M}(\mathbb{R}^n)$: Lebesgue measurable sets.
+	\item $\operatorname{measurable}(\Omega) \coloneqq \Omega \in \mathcal{M}(\mathbb{R}^n)$.
+	\item $\mu(\Omega) \coloneqq \int_\Omega 1 \, dx$ (Lebesgue measure).
+	\item $\operatorname{finite measure}(\Omega) \coloneqq \mu(\Omega) < \infty$.
+	\item $\operatorname{infinite measure}(\Omega) \coloneqq \mu(\Omega) = \infty$.
+	\item $\operatorname{area}(\Omega), \operatorname{volume}(\Omega) \coloneqq \mu(\Omega)$ (depending on context).
+\end{itemize}
+
+\subsection{Function Spaces and Operators}
+\begin{itemize}
+	\item $C^\infty(\Omega) \coloneqq \{f : \Omega \to \mathbb{R} : \partial^\alpha f \text{ exists and is continuous } \forall \alpha\}$.
+	\item $C_c^\infty(\Omega)$: Smooth functions with compact support in $\Omega$.
+	\item $\operatorname{Lipschitz}(f) \coloneqq \exists L>0,\;\forall x,y :\; |f(x)-f(y)| \leq L|x-y| \ .$
+	\item $p(x) : \Omega \to [1,\infty)$: Variable exponent.
+	\item $p^- \coloneqq \operatorname{ess}\inf\limits_{x\in\Omega} p(x)$.
+	\item $p^+ \coloneqq \operatorname{ess}\sup\limits_{x\in\Omega} p(x)$.
+	\item $p'(x) \coloneqq \frac{p(x)}{p(x)-1}$ (conjugate exponent).
+	\item $p^*(x) \coloneqq \frac{np(x)}{n - p(x)}$ (Sobolev conjugate, for $p(x)<n$).
+	\item $\rho_{p(\cdot)}(f) \coloneqq \int_\Omega |f(x)|^{p(x)} dx$ (modular).
+	\item $L^{p(\cdot)}(\Omega) \coloneqq \{ f : \exists\lambda>0, \rho_{p(\cdot)}(f/\lambda) < \infty \}$.
+	\item $\|f\|_{p(\cdot)} \coloneqq \inf\{ \lambda > 0 : \rho_{p(\cdot)}(f/\lambda) \leq 1 \}$ (Luxemburg norm).
+	\item $W^{k,p(\cdot)}(\Omega) \coloneqq \{ f \in L^{p(\cdot)} : D^\alpha f \in L^{p(\cdot)},\ |\alpha| \leq k \}$.
+	\item $\|f\|_{W^{k,p(\cdot)}} \coloneqq \sum\limits_{|\alpha|\leq k} \|D^\alpha f\|_{p(\cdot)}$.
+	\item $W^{1,p(\cdot)}_0(\Omega) \coloneqq \overline{C_c^\infty(\Omega)}^{\|\cdot\|_{W^{1,p(\cdot)}}}$.
+	\item Continuous embedding:  $$X \hookrightarrow Y \;\coloneqq\; \exists C>0,\,\forall x \in X \,:\, \|x\|_Y \leq C\|x\|_X \ $$
+\end{itemize}
+
+\subsection{Differential Operators}
+\begin{itemize}
+	\item $D^\alpha f \coloneqq \frac{\partial^{|\alpha|} f}{\partial x_1^{\alpha_1} \cdots \partial x_n^{\alpha_n}}$ (multi-index derivative).
+	\item $\nabla u \coloneqq \left( \frac{\partial u}{\partial x_1}, \dots, \frac{\partial u}{\partial x_n} \right)$ (gradient).
+	\item $\operatorname{div} \mathbf{F} \coloneqq \nabla \cdot \mathbf{F} = \sum\limits_{i=1}^n \frac{\partial F_i}{\partial x_i}$ (divergence).
+	\item $\Delta_{p(x)} u \coloneqq \operatorname{div}(|\nabla u|^{p(x)-2} \nabla u)$ ($p(x)$-Laplacian).
+	\item $u_t \coloneqq \frac{\partial u}{\partial t}$ (time derivative).
+\end{itemize}
+
+\subsection{Boundary Regularity}
+\begin{itemize}
+	\item $\operatorname{Lipschitz boundary}(\Omega) \coloneqq \\ \forall x \in \partial\Omega,\ \exists U \ni x,\ \exists f:\mathbb{R}^{n-1}\to\mathbb{R} \text{ Lipschitz},$ $$ U \cap \Omega = \{(x',x_n): x_n > f(x')\}$$
+	\item $\operatorname{C}^{k,\alpha}(\partial\Omega) \coloneqq \partial\Omega \text{ locally the graph of a } C^{k,\alpha} \text{ function}$.
+	\item $\operatorname{smooth}(\partial\Omega) \coloneqq \partial\Omega \in C^\infty$.
+	\item $\Omega \in \mathcal{C}^{0,1} \coloneqq \Omega \text{ has Lipschitz boundary}$.
+	\item $\Omega \in \mathcal{C}^{k,\alpha} \coloneqq \partial\Omega \in C^{k,\alpha}$.
+	\item $\Omega \text{ smooth domain} \coloneqq \partial\Omega \in C^\infty$.
+	\item $\Omega \text{ bounded domain} \coloneqq \operatorname{bounded}(\Omega) \land \operatorname{open}(\Omega) \land \operatorname{connected}(\Omega)$.
+\end{itemize}
+
+\subsection{Homotopy and Fundamental Group}
+\begin{itemize}
+	\item $\pi_1(\Omega, x_0) \coloneqq \{[f] : f:[0,1]\to\Omega,\ f(0)=f(1)=x_0\}$.
+	\item $[f] \coloneqq \\ \{g:[0,1]\to\Omega : g(0)=g(1)=x_0,\ \\ \exists H:[0,1]\times[0,1]\to\Omega,\ H(s,0)=f(s),\ H(s,1)=g(s), \\ \text{ } \hspace{2.5in} H(0,t)=H(1,t)=x_0\}$.
+	\item $[f]\cdot[g] \coloneqq [f*g]$, where $(f*g)(s) \coloneqq \begin{cases} f(2s), & 0\leq s\leq \frac{1}{2} \\ g(2s-1), & \frac{1}{2}\leq s\leq 1 \end{cases}$.
+	\item $1_{\pi_1} \coloneqq [\text{constant path at } x_0]$.
+	\item $[f]^{-1} \coloneqq [f^{-1}]$, where $f^{-1}(s) \coloneqq f(1-s)$.
+	\item $\pi_1(\Omega) \coloneqq \pi_1(\Omega, x_0)$ (up to isomorphism).
+\end{itemize}
+
+\subsection{Sigma-Algebras and Generation}
+\begin{itemize}
+	\item The set of all $\sigma$-algebras on $\mathbb{R}^n$ \\  $\Sigma(\mathbb{R}^n) \coloneqq \{\mathcal{A} \subset \mathcal{P}(\mathbb{R}^n) : \emptyset \in \mathcal{A},\\ \text{ \ } \hspace{1.5in} A \in \mathcal{A} \Rightarrow A^c \in \mathcal{A},\ A_i \in \mathcal{A} \Rightarrow \bigcup_{i=1}^\infty A_i \in \mathcal{A}\}$ 
+	\item $\sigma(\mathcal{F}) \coloneqq \bigcap\{\mathcal{A} : \mathcal{F} \subset \mathcal{A},\ \mathcal{A} \in \Sigma(\mathbb{R}^n)\}$ ($\sigma$-algebra generated by $\mathcal{F}$).
+	\item Explicit form for countable generation:\\
+	 $\sigma(\mathcal{F}) = \mathcal{F} \cup \{A^c : A \in \mathcal{F}\} \cup \{\bigcup_{i=1}^\infty A_i : A_i \in \mathcal{F} \text{ or } A_i^c \in \mathcal{F}\}$
+	\item $\mathcal{B}(\mathbb{R}^n) = \sigma(\{(-\infty, a_1]\times\cdots\times(-\infty, a_n] : a_i \in \mathbb{Q}\})$.
+	\item For Lebesgue measure:\\
+	\fontsize{14.5}{0.7\baselineskip}\selectfont
+	 $\mathcal{B}(\mathbb{R}^n) = \{E \subset \mathbb{R}^n : \forall \epsilon>0,\ \exists O \in \mathcal{O},\ F \in \mathcal{F},\ F \subset E \subset O,\ \mu(O \setminus F) < \epsilon\}$
+	 \normalsize
+\end{itemize}
+
+\subsection{Essential Infimum and Supremum}
+\begin{itemize}
+	\item $\operatorname{ess}\inf\limits_{x\in\Omega} p(x) \coloneqq \sup\{ a \in \mathbb{R} : \mu(\{x \in \Omega : p(x) < a\}) = 0 \}$.
+	\item $\operatorname{ess}\sup\limits_{x\in\Omega} p(x) \coloneqq \inf\{ b \in \mathbb{R} : \mu(\{x \in \Omega : p(x) > b\}) = 0 \}$.
+	\item Equivalently:
+\begin{itemize}
+	\item $\operatorname{ess}\inf\limits_{x\in\Omega} p(x) = \sup\{ a : p(x) \geq a \text{ a.e.}\}$.
+	\item $\operatorname{ess}\sup\limits_{x\in\Omega} p(x) = \inf\{ b : p(x) \leq b \text{ a.e.}\}$.
+	\item $\operatorname{ess}\inf\limits_{x\in\Omega} p(x) = \inf\left\{\sup_{x\in\Omega\setminus N} p(x) : N \subset \Omega,\ \mu(N)=0\right\}$.
+	\item $\operatorname{ess}\sup\limits_{x\in\Omega} p(x) = \sup\left\{\inf_{x\in\Omega\setminus N} p(x) : N \subset \Omega,\ \mu(N)=0\right\}$.
+\end{itemize}
+\end{itemize}
+
+\subsection{Properties of Essential Bounds}
+\begin{itemize}
+	\item Duality:
+	\begin{itemize}
+		\item $\operatorname{ess}\inf\limits_{x\in\Omega} p(x) = -\operatorname{ess}\sup\limits_{x\in\Omega} (-p(x))$.
+		\item $\operatorname{ess}\sup\limits_{x\in\Omega} p(x) = -\operatorname{ess}\inf\limits_{x\in\Omega} (-p(x))$.
+	\end{itemize}
+	\item Inequalities:
+	\begin{itemize}
+		\item $\operatorname{ess}\inf\limits_{x\in\Omega} p(x) \leq p(x) \leq \operatorname{ess}\sup\limits_{x\in\Omega} p(x)$ a.e.
+		\item $\operatorname{ess}\inf (p+q) \geq \operatorname{ess}\inf p + \operatorname{ess}\inf q$.
+		\item $\operatorname{ess}\sup (p+q) \leq \operatorname{ess}\sup p + \operatorname{ess}\sup q$.
+	\end{itemize}
+	\item Continuity: If $p \in C(\Omega)$ and $\Omega$ is connected, then $$\operatorname{ess}\inf p = \inf p \, \text{and} \, \operatorname{ess}\sup p = \sup p$$
+	\item Constant functions: If $p(x)=c$ a.e., then $\operatorname{ess}\inf p = \operatorname{ess}\sup p = c$.
+	\item Restriction: If $\Omega' \subset \Omega$ with $\mu(\Omega \setminus \Omega')=0$, then $$\operatorname{ess}\inf_{\Omega} p = \operatorname{ess}\inf_{\Omega'} p$$ and similarly for the supremum.
+\end{itemize}
+\section{Partial Differential Equations}\label{sec:pde}
+
+\subsection{General Definitions and Classification}
+
+\begin{itemize}
+	\item \fontsize{15}{1.2\baselineskip}\selectfont \textbf{General form:} $F(x, u, \nabla u, \nabla^2 u, \dots, \nabla^k u) = 0$ where $u:\Omega \subset \mathbb{R}^n \to \mathbb{R}^m$ \normalsize
+	\item $\nabla^k u \coloneqq \{D^\alpha u : |\alpha| = k\}$ (all $k$-th order derivatives)
+	\item \textbf{Order:} $k \coloneqq \max\{|\alpha| : \partial^\alpha u \text{ appears non-trivially in } F\}$
+	\begin{itemize}
+		\item First-order: $F(x, u, \nabla u) = 0$
+		\item Second-order: $F(x, u, \nabla u, \nabla^2 u) = 0$
+	\end{itemize}
+\end{itemize}
+
+\subsection{Linearity Classification}
+
+\begin{itemize}
+	\item \textbf{Linear:} $\sum\limits_{|\alpha|\leq k}a_\alpha(x)D^\alpha u = f(x)$
+	\item \textbf{Semi-linear:} $\sum\limits_{|\alpha|=k} a_\alpha(x)D^\alpha u + b(x, u, \dots, \nabla^{k-1}u) = 0$\fontsize{15.5}{0.7\baselineskip}\selectfont
+	\item \textbf{Quasi-linear:} $\sum\limits_{|\alpha|=k} a_\alpha(x, u, \dots, \nabla^{k-1}u)D^\alpha u + b(x, u, \dots, \nabla^{k-1}u) = 0$\normalsize
+	\item \textbf{Fully nonlinear:} Not of the above forms
+\end{itemize}
+
+\subsection{Classical PDE Types and Examples}
+
+\subsubsection{Second-Order Linear PDEs (Scalar Case)}
+For equation: $a_{11}u_{xx} + 2a_{12}u_{xy} + a_{22}u_{yy} + b_1u_x + b_2u_y + cu = f$
+\begin{itemize}
+	\item Discriminant: $\Delta \coloneqq a_{12}^2 - a_{11}a_{22}$
+	\item Classification:
+	\begin{itemize}
+		\item $\Delta < 0$: Elliptic (e.g., $-\Delta u = f$)
+		\item $\Delta = 0$: Parabolic (e.g., $u_t - \Delta u = f$)
+		\item $\Delta > 0$: Hyperbolic (e.g., $u_{tt} - \Delta u = f$)
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Systems of PDEs}
+\begin{itemize}
+	\item \textbf{Elliptic system:} $-\sum\limits_{i,j=1}^n \partial_{x_i}(A^{ij}(x)\partial_{x_j}u) = f$
+	\item \textbf{Parabolic system:} $u_t - \sum\limits_{i,j=1}^n \partial_{x_i}(A^{ij}(x,t)\partial_{x_j}u) = f$
+	\item \textbf{Hyperbolic system:} $u_{tt} - \sum\limits_{i,j=1}^n \partial_{x_i}(A^{ij}(x)\partial_{x_j}u) = f$
+\end{itemize}
+
+\subsubsection{Other Important Equations}
+\begin{itemize}
+	\item \textbf{Transport equation:} $u_t + b\cdot\nabla u = f$
+	\item \textbf{Wave equation:} $u_{tt} - c^2\Delta u = 0$
+	\item \textbf{Hamilton-Jacobi equation:} $u_t + H(x,\nabla u) = 0$
+	\item \textbf{Schrödinger equation:} $u_t = i\Delta u$ (quantum)
+	\item \textbf{Fractional Laplacian:} $(-\Delta)^s u = f$ where $s \in (0,1)$
+\end{itemize}
+
+\subsection{Variable Exponent PDEs}
+
+\begin{itemize}
+	\item \textbf{$p(x)$-Laplacian:} $\Delta_{p(x)} u \coloneqq \operatorname{div}(|\nabla u|^{p(x)-2}\nabla u)$
+	\item \textbf{Elliptic $p(x)$-equation:} $-\Delta_{p(x)} u = f(x,u,\nabla u)$
+	\item \textbf{Parabolic $p(x)$-equation:} $u_t - \Delta_{p(x)} u = f(x,t)$
+	\item \textbf{General divergence form:}\\ $-\operatorname{div}(a(x,\nabla u)) + b(x,u) = f$ with $|a(x,\xi)| \leq c(|\xi|^{p(x)-1} + 1)$
+	\item \textbf{Fractional $p(x)$-Laplacian:} $(-\Delta_{p(x)})^s u = f$
+\end{itemize}
+
+\subsection{Degeneracy and Singularity}
+
+\begin{itemize}
+	\item \textbf{Degenerate case:} $p(x) > 2 \Rightarrow |\nabla u|^{p(x)-2} \to \infty$ as $|\nabla u| \to \infty$
+	\item \textbf{Singular case:} $1 < p(x) < 2 \Rightarrow |\nabla u|^{p(x)-2} \to \infty$ as $|\nabla u| \to 0$
+\end{itemize}
+
+\subsection{Boundary and Initial Conditions}
+
+\begin{itemize}
+	\item \textbf{Dirichlet:} $u = g$ on $\partial\Omega$
+	\item \textbf{Neumann:} $\frac{\partial u}{\partial\nu} = h$ on $\partial\Omega$
+	\item \textbf{Robin (mixed):} $\alpha u + \beta\frac{\partial u}{\partial\nu} = \gamma$ on $\partial\Omega$
+	\item \textbf{Cauchy:} $u = u_0$, $u_t = u_1$ at $t=0$ (for evolution equations)
+\end{itemize}
+
+\subsection{Solution Spaces and Regularity}
+
+\begin{itemize}
+	\item \textbf{Classical solutions:} $u \in C^k(\Omega)$
+	\item \textbf{Weak solutions:} $u \in W^{k,p}(\Omega)$
+	\item \textbf{Variable exponent spaces:} $u \in W^{k,p(\cdot)}(\Omega)$
+	\item \textbf{Time-dependent problems:}
+	\begin{itemize}
+		\item $u \in C([0,T], X)$ for hyperbolic equations
+		\item $u \in L^p(0,T; W^{1,p(\cdot)}(\Omega))$ for parabolic $p(x)$-problems
+	\end{itemize}
+\end{itemize}
+
+\subsection{Well-Posedness}
+\vspace{-0.5in}
+\begin{itemize}
+	\item \textbf{Existence:} $\exists u \in X$ satisfying the PDE with given data \fontsize{15.5}{1.2\baselineskip}\selectfont
+	\item \textbf{Uniqueness:} $u_1 = u_2$ if both satisfy the same PDE with identical data \normalsize
+	\item \textbf{Continuous dependence:} $\|u_1 - u_2\|_X \leq C\|\text{data}_1 - \text{data}_2\|_Y$
+\end{itemize}
+
+\subsection{(BVPs) vs. (IVPs)}
+
+\begin{itemize}
+	\fontsize{15}{0.7\baselineskip}\selectfont
+	\item \textbf{BVP:} PDE + boundary conditions (elliptic/stationary problems)
+	\item \textbf{IVP:} PDE + initial conditions (parabolic/hyperbolic evolution problems)
+	\item \textbf{Initial-Boundary Value Problem (IBVP):}\\ PDE + both initial and boundary conditions
+\end{itemize}
+\section{Nonlinear PDEs with Constant Exponents}\label{sec:nonlinear-constant-pde}
+
+\subsection{General Forms and Operators}
+
+\begin{itemize}
+	\item  \textbf{General form:} \\ $F(x, u, \nabla u, \nabla^2 u) = 0$ with constant exponents $p, q, r \in (1,\infty)$ \normalsize
+	\item \textbf{$p$-Laplacian:} $\Delta_p u \coloneqq \operatorname{div}(|\nabla u|^{p-2}\nabla u)$
+	\item \textbf{Fully nonlinear:} $F(D^2u) = 0$ (e.g., Monge-Ampère equation)
+	\item \textbf{General divergence form:}\\ $-\operatorname{div}(a(|\nabla u|^2)\nabla u) = f$ with $a(t)t \sim t^{(p-2)/2}$
+\end{itemize}
+
+\subsection{Operator Properties}
+
+\begin{itemize}
+	\item \textbf{Monotone:} $\langle A(u) - A(v), u-v \rangle \geq 0$
+	\item \textbf{Strictly monotone:} $\langle A(u) - A(v), u-v \rangle > 0$ for $u \neq v$
+	\item \textbf{Coercive:} $\frac{\langle A(u), u \rangle}{\|u\|} \to \infty$ as $\|u\| \to \infty$
+	\item \textbf{Hemicontinuous:} $t \mapsto \langle A(u+tv), w \rangle$ continuous for all $u, v, w$
+	\item \textbf{Pseudo-monotone:} \\ \fontsize{15.5}{1.2\baselineskip}\selectfont $\limsup \langle A(u_n), u_n - u \rangle \geq 0 \Rightarrow \langle A(u), u - v \rangle \leq \liminf \langle A(u_n), u_n - v \rangle$ \normalsize
+	\item \textbf{Leray-Lions conditions:} $a(x,u,\nabla u)$ satisfies appropriate growth, monotonicity, and coercivity
+\end{itemize}
+
+\subsection{Growth Classification}
+
+\begin{itemize}
+	\item \textbf{Sublinear growth:} $|F(x,\xi)| \leq C(1 + |\xi|^{p-1})$ with $1 < p < 2$
+	\item \textbf{Polynomial growth:} $|F(x,\xi)| \leq C(1 + |\xi|^p)$
+	\item \textbf{Superlinear growth:} $|F(x,\xi)| \leq C(1 + |\xi|^{p-1})$ with $p > 2$
+	\item \textbf{Critical growth:}\\ $|F(x,\xi)| \sim |\xi|^{p^*}$ where $p^* = \frac{np}{n-p}$ (Sobolev critical exponent)
+	\item \textbf{Supercritical growth:} $|F(x,\xi)| \gtrsim |\xi|^q$ with $q > p^*$
+	\item \textbf{Exponential growth:} $|F(x,\xi)| \leq C(e^{|\xi|} - 1)$
+\end{itemize}
+
+\subsection{Ellipticity and Degeneracy Types}
+
+\begin{itemize}
+	\item \textbf{Uniformly elliptic:} $\lambda|\xi|^2 \leq \sum a_{ij}\xi_i\xi_j \leq \Lambda|\xi|^2$
+	\item\fontsize{15.5}{0.7\baselineskip}\selectfont \textbf{Degenerate elliptic ($p$-Laplacian):} $p > 2$, $|\nabla u|^{p-2} \to \infty$ as $|\nabla u| \to \infty$
+	\item \textbf{Singular elliptic ($p$-Laplacian):}$1 < p < 2$, $|\nabla u|^{p-2} \to \infty$ as $|\nabla u| \to 0$
+\end{itemize}
+\normalsize 
+\subsection{Elliptic $p$-Laplacian Equations}
+
+\begin{itemize}
+	\item \textbf{Basic equation:} $-\Delta_p u = f(x)$
+	\item \textbf{With potential:} $-\Delta_p u + V(x)|u|^{q-2}u = 0$
+	\item \textbf{Eigenvalue problem:} $-\Delta_p u = \lambda|u|^{p-2}u$
+	\item \textbf{Lane-Emden type:} $-\Delta_p u = |u|^{q-2}u$
+	\item \textbf{Concave-convex:} $-\Delta_p u = \lambda|u|^{q-2}u + \mu|u|^{r-2}u$ with $1 < q < p < r$
+\end{itemize}
+
+\subsection{Evolution Equations with Constant $p$}
+
+\subsubsection{Parabolic $p$-Laplacian}
+\begin{itemize}
+	\item $u_t - \Delta_p u = f(x,t)$
+	\item $u_t - \Delta_p u = |u|^{q-2}u$ (reaction-diffusion)
+	\item $u_t - \Delta_p u + |u|^{r-2}u = 0$ (with absorption)
+\end{itemize}
+
+\subsubsection{Hyperbolic $p$-Laplacian}
+\begin{itemize}
+	\item $u_{tt} - \Delta_p u = f(x,t)$
+	\item $u_{tt} - \Delta_p u + m(x)u_t = 0$ (with damping)
+\end{itemize}
+
+\subsection{Nonlinearity Structure}
+
+\begin{itemize}
+	\item \textbf{Convex nonlinearity:} $f(t) = |t|^{q-2}t$ with $q \geq 2$
+	\item \textbf{Concave nonlinearity:} $f(t) = |t|^{q-2}t$ with $1 < q < 2$
+	\item \textbf{Concave-convex:} $f(t) = |t|^{q-2}t + \lambda|t|^{r-2}t$ with $1 < q < p < r$
+	\item \textbf{Fučík type:} $f(t) = \alpha(t^+)^{p-1} - \beta(t^-)^{p-1}$
+\end{itemize}
+
+\subsection{Variational Structure and Critical Point Theory}
+
+\begin{itemize}
+	\item \textbf{Energy functional:} $J(u) = \frac{1}{p}\int_\Omega |\nabla u|^p dx - \frac{1}{q}\int_\Omega |u|^q dx$
+	\item \textbf{Nehari manifold:} $\mathcal{N} = \{u \neq 0 : \langle J'(u), u \rangle = 0\}$
+	\item \textbf{Mountain Pass type:}\\ $J(0) = 0$, $\exists e$ with $J(e) < 0$, $J$ satisfies Palais-Smale condition
+	\item \textbf{Linking type:} $\exists$ finite-dimensional $Y$ and infinite-codimensional $Z$ with appropriate level sets
+\end{itemize}
+
+\subsection{Analytical Properties of $p$-Laplacian}
+
+\begin{itemize}
+	\item \textbf{Homogeneity:} $\Delta_p(\lambda u) = |\lambda|^{p-2}\lambda \Delta_p u$
+	\item \textbf{Scaling invariance:} $u_\lambda(x) = \lambda^{\frac{p-n}{p-1}}u(\lambda x)$ for homogeneous problems
+	\item\fontsize{15.5}{1.2\baselineskip}\selectfont \textbf{Comparison principle:}\\ $-\Delta_p u \leq -\Delta_p v$ in $\Omega$, $u \leq v$ on $\partial\Omega \Rightarrow u \leq v$ in $\Omega$ \normalsize
+	\item \textbf{Harnack inequality:} $\sup_{B_R} u \leq C\inf_{B_R} u$ for nonnegative solutions
+	\item \textbf{Regularity:}\\ $u \in C^{1,\alpha}_{\text{loc}}(\Omega)$ for $p \neq 2$ (unless degenerate/singular cases)
+\end{itemize}
+
+\subsection{Existence and Uniqueness Theorems}
+
+\begin{itemize}
+	\item \textbf{Minty-Browder:}\\ monotone + coercive + hemicontinuous $\Rightarrow$ existence
+	\item \textbf{Strict monotonicity:} $\Rightarrow$ uniqueness
+	\item \textbf{Mountain Pass Theorem (Ambrosetti-Rabinowitz):}\\ for functionals with geometric structure
+	\item \textbf{Rabinowitz Global Bifurcation:} existence of continuum of solutions
+\end{itemize}
+
+\subsection{Bifurcation and Spectral Theory}
+
+\begin{itemize}
+	\item \textbf{$p$-Laplacian eigenvalue:} $-\Delta_p u = \lambda|u|^{p-2}u$
+	\item \textbf{Fučík spectrum:} $-\Delta_p u = \alpha(u^+)^{p-1} - \beta(u^-)^{p-1}$
+	\item \textbf{Resonance problems:} $-\Delta_p u = \lambda_1|u|^{p-2}u + f(x)$
+	\item \textbf{Bifurcation from eigenvalue:}\\ existence of nontrivial solutions near eigenvalues
+\end{itemize}
+
+\subsection{Asymptotic Limits and Special Cases}
+
+\begin{itemize}
+	\item \textbf{$p \to 1^+$:} Total variation flow, image processing
+	\item \textbf{$p \to 2$:} Linear Laplacian (both limits)
+	\item \textbf{$p \to \infty$:} $\infty$-Laplacian, $\Delta_\infty u = \sum_{i,j} u_{x_i}u_{x_j}u_{x_ix_j}$
+	\item \textbf{$p = 1$:} Not covered (degenerate, requires special techniques)
+\end{itemize}
+
+\subsection{Physical Applications and Models}
+
+\begin{itemize}
+	\item \textbf{Non-Newtonian fluids:}
+	\begin{itemize}
+		\item Shear-thinning (pseudoplastic): $p < 2$
+		\item Shear-thickening (dilatant): $p > 2$
+		\item Newtonian: $p = 2$
+	\end{itemize}
+	\item \textbf{Plasticity theory:} $p \to \infty$ (perfectly plastic materials)
+	\item \textbf{Glacier flow:} Glen's law, $p = 3$ or $p = 4$
+	\item \textbf{Power-law fluids:} $\tau = \mu|\dot{\gamma}|^{p-2}\dot{\gamma}$
+	\item \textbf{Porous media:}\\ Related to $p$-Laplacian with appropriate modifications
+\end{itemize}
+
+\subsection{Solution Spaces}
+
+\begin{itemize}
+	\item \textbf{Natural energy space:} $W^{1,p}_0(\Omega)$ for Dirichlet problems
+	\item \textbf{Weak solutions:} $u \in W^{1,p}(\Omega)$ satisfying $\int_\Omega |\nabla u|^{p-2}\nabla u \cdot \nabla \phi = \int_\Omega f\phi$
+	\item \textbf{Regularity spaces:} $C^{1,\alpha}(\overline{\Omega})$ for $p \neq 2$
+	\item \textbf{Time-dependent:}\\ $L^p(0,T; W^{1,p}(\Omega)) \cap C([0,T]; L^2(\Omega))$ for parabolic case
+\end{itemize}
+\section{Nonlinear PDEs with Variable Exponents}\label{sec:nonlinear-pde-variable-exponents}
+
+\subsection{General Framework and Notation}
+
+\begin{itemize}
+	\item \textbf{General form:} $F(x, u, \nabla u, \nabla^2 u, p(x), q(x), \dots) = 0$
+	\item \textbf{Variable exponents:} $p, q, r: \Omega \to [1, \infty)$ measurable functions
+	\item \textbf{Exponent bounds:} $p^- \coloneqq \operatorname{ess}\inf_{x\in\Omega} p(x)$, $p^+ \coloneqq \operatorname{ess}\sup_{x\in\Omega} p(x)$
+	\item \textbf{Regularity assumption:} Typically $1 < p^- \leq p^+ < \infty$ and log-Hölder continuity: $|p(x) - p(y)| \leq \frac{C}{-\log|x-y|}$
+\end{itemize}
+
+\subsection{Growth Conditions and Nonlinearities}
+
+\begin{itemize}
+	\item \textbf{Polynomial growth:} $|F(x,\xi)| \leq C(1 + |\xi|^{p(x)})$
+	\item \textbf{Non-standard growth:}\\ $|F(x,\xi)| \leq C(1 + |\xi|^{p(x)})$ where $p(\cdot)$ is variable
+	\item \textbf{Logarithmic growth:} $|F(x,\xi)| \leq C(\log(e + |\xi|))^{p(x)}$
+	\item \textbf{Exponential growth:} $|F(x,\xi)| \leq C(e^{|\xi|^{p(x)}} - 1)$
+	\item \textbf{Sublinear nonlinearity:} $q(x) < p(x)$ a.e.
+	\item \textbf{Superlinear nonlinearity:} $q(x) > p(x)$ a.e.
+	\item \textbf{Critical growth:} $q(x) = p^*(x) \coloneqq \frac{np(x)}{n - p(x)}$ (Sobolev conjugate)
+	\item \textbf{Subcritical growth:} $q(x) < p^*(x)$ a.e.
+	\item \textbf{Supercritical growth:} $q(x) > p^*(x)$ a.e.
+\end{itemize}
+
+\subsection{Ellipticity and Degeneracy Types}
+
+\begin{itemize}
+	\item \textbf{Uniformly elliptic:} $\exists \lambda, \Lambda > 0$, $\lambda|\xi|^2 \leq \sum_{i,j} a_{ij}(x)\xi_i\xi_j \leq \Lambda|\xi|^2$
+	\item \textbf{Degenerate elliptic:}\\ $\sum_{i,j} a_{ij}(x,u,\nabla u)\xi_i\xi_j \geq 0$ with possible degeneracy
+	\item \textbf{Singular elliptic:} Coefficients blow up as $|\nabla u| \to 0$
+	\item \textbf{$p(x)$-Laplacian type:}
+	\begin{itemize}
+		\item Degenerate when $p(x) > 2$: $|\nabla u|^{p(x)-2} \to \infty$ as $|\nabla u| \to \infty$
+		\item Singular when $1 < p(x) < 2$: $|\nabla u|^{p(x)-2} \to \infty$ as $|\nabla u| \to 0$
+	\end{itemize}
+\end{itemize}
+
+\subsection{Operator Structures and Forms}
+
+\begin{itemize}
+	\item \textbf{Divergence form:} $-\operatorname{div}(A(x,u,\nabla u)) + B(x,u) = f$
+	\item \textbf{Non-divergence form:} $\sum_{i,j} a_{ij}(x,u,\nabla u)u_{x_ix_j} + b(x,u,\nabla u) = 0$
+	\item \textbf{Quasilinear divergence:} $-\operatorname{div}(a(x,|\nabla u|)\nabla u) + b(x,u) = f$
+	\item \textbf{Fully nonlinear:} $F(x,u,\nabla u, D^2u) = 0$ with $F$ nonlinear in $D^2u$
+	\item \textbf{$p(x)$-Laplacian:} $\Delta_{p(x)} u \coloneqq \operatorname{div}(|\nabla u|^{p(x)-2}\nabla u)$
+\end{itemize}
+
+\subsection{Elliptic Equations with Variable Exponents}
+
+\begin{itemize}
+	\item \textbf{Basic $p(x)$-Laplacian:} $-\Delta_{p(x)} u = f(x)$
+	\item \textbf{With reaction term:} $-\Delta_{p(x)} u + |u|^{q(x)-2}u = f(x)$
+	\item \textbf{Concave-convex type:} $-\Delta_{p(x)} u = \lambda|u|^{q(x)-2}u + \mu|u|^{r(x)-2}u$
+	\item \textbf{Eigenvalue problem:} $-\Delta_{p(x)} u = \lambda|u|^{p(x)-2}u$
+	\item \textbf{Anisotropic:} $-\operatorname{div}\left(\sum_{i=1}^n |u_{x_i}|^{p_i(x)-2}u_{x_i}\right) = f$
+\end{itemize}
+
+\subsection{Evolution Equations with Variable Exponents}
+
+\subsubsection{Parabolic $p(x)$-Equations}
+\begin{itemize}
+	\item $u_t - \Delta_{p(x)} u = f(x,t)$
+	\item $u_t - \Delta_{p(x)} u + |u|^{q(x)-2}u = 0$
+	\item $u_t - \operatorname{div}(|\nabla u|^{p(x)-2}\nabla u) = |u|^{r(x)-2}u$ (reaction-diffusion)
+\end{itemize}
+
+\subsubsection{Hyperbolic $p(x)$-Equations}
+\begin{itemize}
+	\item $u_{tt} - \Delta_{p(x)} u = f(x,t)$
+	\item $u_{tt} - \Delta_{p(x)} u + m(x)u_t + |u|^{q(x)-2}u = 0$ (with damping)
+\end{itemize}
+
+\subsection{Variational Structure and Critical Points}
+
+\begin{itemize}
+	\item \textbf{Energy functional:} $J(u) = \int_\Omega \frac{1}{p(x)}|\nabla u|^{p(x)} dx - \int_\Omega F(x,u) dx$
+	\item \textbf{Non-variational:} No associated energy functional exists
+	\item \textbf{Euler-Lagrange:} $J'(u) = 0$ corresponds to $-\Delta_{p(x)} u = f(x,u)$
+	\item \textbf{Mountain Pass geometry:}\\ $J(0) = 0$, $\exists e$ with $J(e) < 0$, suitable compactness
+	\item \textbf{Nehari manifold:} $\mathcal{N} = \{u \neq 0 : \langle J'(u), u \rangle = 0\}$
+\end{itemize}
+
+\subsection{Solution Dependence and Classification}
+
+\begin{itemize}
+	\item \textbf{Autonomous:} $F = F(u, \nabla u, \nabla^2 u)$ (no explicit $x$-dependence)
+	\item \textbf{Non-autonomous:} $F = F(x, u, \nabla u, \nabla^2 u)$
+	\item \textbf{Hamiltonian type:} Often with $f(x,-u) = -f(x,u)$ symmetry
+\end{itemize}
+
+\subsection{Regularity Theory for $p(x)$-Equations}
+
+\begin{itemize}
+	\item \textbf{Hölder continuity:} $u \in C^{0,\alpha}(\Omega)$ under suitable conditions
+	\item \textbf{Lipschitz regularity:} $u \in C^{0,1}(\Omega)$ for bounded $p(\cdot)$ away from 1
+	\item \textbf{Boundedness:} $\|u\|_{L^\infty(\Omega)} \leq C$ under growth conditions
+	\item \textbf{Higher regularity:} $u \in C^{1,\alpha}(\Omega)$ for $p(\cdot)$ sufficiently regular
+	\item \textbf{No higher regularity:} In general, Hölder continuity may be optimal
+\end{itemize}
+
+\subsection{Special Phenomena in Variable Exponent Spaces}
+
+\begin{itemize}
+	\item \textbf{Non-homogeneity:} $\|\lambda u\|_{p(\cdot)} \neq |\lambda|\|u\|_{p(\cdot)}$ in general
+	\item \textbf{Modular convergence:} $u_n \to u$ in $L^{p(\cdot)}$ iff $\rho_{p(\cdot)}(u_n - u) \to 0$
+	\item \textbf{Lavrentiev phenomenon:} $\inf_{W^{1,\infty}} J \neq \inf_{W^{1,p(\cdot)}} J$ possible
+	\item \textbf{Finite time extinction:} For parabolic equations when $p^- < 2$
+	\item \textbf{Infinite speed of propagation:} For parabolic equations when $p^- \geq 2$
+	\item \textbf{Lack of scaling invariance:}\\ No simple scaling transformations in general
+\end{itemize}
+
+\subsection{Bifurcation Theory for $p(x)$-PDEs}
+
+\begin{itemize}
+	\item \textbf{Local bifurcation:} Existence of nontrivial solutions near trivial ones
+	\item \textbf{Global bifurcation:}\\ Existence of continuum/branch of solutions (Rabinowitz type)
+	\item \textbf{Spectral bifurcation:}\\ Bifurcation from eigenvalues of linearized operator
+	\item \textbf{Variational bifurcation:} Bifurcation at mountain pass levels
+	\item \textbf{$p(x)$-eigenvalue problem:} $-\Delta_{p(x)} u = \lambda|u|^{p(x)-2}u$
+\end{itemize}
+
+\subsection{Solution Spaces and Functional Setting}
+
+\begin{itemize}
+	\item \textbf{Natural space:} $W^{1,p(\cdot)}_0(\Omega)$ for Dirichlet problems
+	\item \fontsize{15.5}{1.2\baselineskip}\selectfont \textbf{Variable Sobolev space:} $W^{k,p(\cdot)}(\Omega) = \{u : D^\alpha u \in L^{p(\cdot)}(\Omega), |\alpha| \leq k\}$ \normalsize
+	\item \textbf{Time-dependent:} $L^{p(\cdot)}(0,T; W^{1,p(\cdot)}(\Omega)) \cap C([0,T]; L^2(\Omega))$
+	\item \textbf{Orlicz-Sobolev spaces:} For non-polynomial growth conditions
+\end{itemize}
+
+\subsection{Well-Posedness Issues}
+
+\begin{itemize}
+	\item \textbf{Existence:} Via monotone operator theory, variational methods, or fixed point arguments
+	\item \textbf{Uniqueness:}\\ Generally requires strict monotonicity or additional structure
+	\item \textbf{Continuous dependence:} On initial/boundary data and exponents
+	\item \textbf{Compactness:} Typically requires $p^+ < p^*$ or other restrictions
+\end{itemize}
+\section{Formal Statements of Fundamental Results}\label{sec:formal-results}
+
+\subsection{Variable Exponent Function Spaces}
+
+\begin{itemize}
+	\item \textbf{Variable exponent function:} $p: \Omega \to [1, \infty)$ measurable
+	\item \textbf{Essential bounds:} $p^- \coloneqq \operatorname{ess}\inf_{x\in\Omega} p(x)$, $p^+ \coloneqq \operatorname{ess}\sup_{x\in\Omega} p(x)$
+	\item \textbf{Log-Hölder condition:} $|p(x) - p(y)| \leq \frac{C}{-\log|x-y|}$ for $|x-y| < \frac{1}{2}$
+	\item \textbf{Modular:} $\rho_{p(\cdot)}(f) \coloneqq \int_\Omega |f(x)|^{p(x)} dx$
+	\item \textbf{Lebesgue space:} $L^{p(\cdot)}(\Omega) \coloneqq \{f : \exists\lambda>0, \rho_{p(\cdot)}(f/\lambda) < \infty\}$
+	\item \textbf{Luxemburg norm:} $\|f\|_{p(\cdot)} \coloneqq \inf\{\lambda > 0 : \rho_{p(\cdot)}(f/\lambda) \leq 1\}$
+	\item \fontsize{14.5}{1.2\baselineskip}\selectfont\textbf{Sobolev space:} $W^{k,p(\cdot)}(\Omega) \coloneqq \{f \in L^{p(\cdot)}(\Omega) : D^\alpha f \in L^{p(\cdot)}(\Omega), |\alpha| \leq k\}$ \normalsize
+	\item \textbf{Homogeneous space:} $W^{k,p(\cdot)}_0(\Omega) \coloneqq \overline{C_c^\infty(\Omega)}^{\|\cdot\|_{W^{k,p(\cdot)}}}$
+\end{itemize}
+
+\subsection{Basic Properties of $L^{p(\cdot)}$ Spaces}
+
+\begin{itemize}
+	\item \textbf{Banach space:} $(L^{p(\cdot)}(\Omega), \|\cdot\|_{p(\cdot)})$ is complete
+	\item \textbf{Reflexivity:} $L^{p(\cdot)}(\Omega)$ reflexive $\Leftrightarrow 1 < p^- \leq p^+ < \infty$
+	\item \textbf{Separability:} $L^{p(\cdot)}(\Omega)$ separable $\Leftrightarrow p^+ < \infty$
+	\item \textbf{Conjugate exponent:} $p'(x) \coloneqq \frac{p(x)}{p(x)-1}$ (with $p'(x)=1$ if $p(x)=\infty$)
+	\item \textbf{Duality:} $(L^{p(\cdot)}(\Omega))^* \cong L^{p'(\cdot)}(\Omega)$ when $1 < p^- \leq p^+ < \infty$
+	\item \textbf{Density:} $C_c^\infty(\Omega)$ dense in $W^{1,p(\cdot)}_0(\Omega)$ under log-Hölder condition
+\end{itemize}
+
+\subsection{Fundamental Inequalities}
+
+\begin{itemize}
+	\item \textbf{Hölder inequality:} For $\frac{1}{s(x)} = \frac{1}{p(x)} + \frac{1}{q(x)}$,
+	$$\|fg\|_{s(\cdot)} \leq 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}$$
+	
+	\item \textbf{Minkowski inequality:} $\|f+g\|_{p(\cdot)} \leq C(\|f\|_{p(\cdot)} + \|g\|_{p(\cdot)})$
+	
+	\item \textbf{Poincaré inequality:} $\exists C > 0$ such that for all $u \in W^{1,p(\cdot)}_0(\Omega)$,
+	$$\|u\|_{p(\cdot)} \leq C\|\nabla u\|_{p(\cdot)}$$
+	
+	\item \textbf{Clarkson inequality:} For $p^- \geq 2$,
+	$$\rho_{p(\cdot)}\left(\frac{f+g}{2}\right) + \rho_{p(\cdot)}\left(\frac{f-g}{2}\right) \leq \frac{1}{2}\rho_{p(\cdot)}(f) + \frac{1}{2}\rho_{p(\cdot)}(g)$$
+	
+	\item \textbf{Young inequality:} $ab \leq \frac{a^{p(x)}}{p(x)} + \frac{b^{p'(x)}}{p'(x)}$ for $a,b \geq 0$
+\end{itemize}
+
+\subsection{Embedding Theorems}
+
+\begin{itemize}
+	\item \textbf{Sobolev embedding:} If $p$ log-Hölder and $1 < p^- \leq p^+ < n$, then
+	$$W^{1,p(\cdot)}(\Omega) \hookrightarrow L^{p^*(\cdot)}(\Omega)$$
+	where $p^*(x) \coloneqq \frac{np(x)}{n-p(x)}$
+	
+	\item \textbf{Compact embedding:} If $p(x) \leq q(x) < p^*(x)$ a.e., then
+	$$W^{1,p(\cdot)}_0(\Omega) \hookrightarrow L^{q(\cdot)}(\Omega) \text{ compactly}$$
+	
+	\item \textbf{Rellich-Kondrachov type:} For bounded $\Omega$ and $p^+ < n$,
+	$$W^{1,p(\cdot)}_0(\Omega) \Subset L^{q(\cdot)}(\Omega) \text{ for } q(x) < p^*(x)$$
+\end{itemize}
+
+\subsection{The $p(x)$-Laplace Operator}
+
+\begin{itemize}
+	\item \textbf{Definition:} $\Delta_{p(x)} u \coloneqq \operatorname{div}(|\nabla u|^{p(x)-2}\nabla u)$
+	
+	\item \textbf{Weak solution:} $u \in W^{1,p(\cdot)}_0(\Omega)$ is a weak solution of $-\Delta_{p(x)} u = f$ if
+	$$ \forall v \in W^{1,p(\cdot)}_0(\Omega):\quad  \int_\Omega |\nabla u|^{p(x)-2}\nabla u \cdot \nabla v \, dx = \int_\Omega f v \, dx  $$
+	
+	\item \textbf{Energy functional:} $J(u) \coloneqq \int_\Omega \frac{1}{p(x)}|\nabla u|^{p(x)} dx - \int_\Omega f u dx$
+	
+	\item \textbf{Monotonicity:} $\langle -\Delta_{p(x)} u + \Delta_{p(x)} v, u-v \rangle \geq 0$
+	
+	\item \textbf{Coercivity:} $\frac{\langle -\Delta_{p(x)} u, u \rangle}{\|u\|_{W^{1,p(\cdot)}}} \to \infty$ as $\|u\|_{W^{1,p(\cdot)}} \to \infty$
+\end{itemize}
+
+\subsection{Existence and Regularity Theory}
+
+\subsubsection{Existence Results}
+\begin{itemize}
+	\item \textbf{Direct Method:}\\ \fontsize{14.5}{0.7\baselineskip}\selectfont If $J$ is coercive and weakly lower semicontinuous, then $\exists u_0$ minimizing $J$\normalsize
+	\item \textbf{Minty-Browder:}\\
+	\fontsize{15}{1.2\baselineskip}\selectfont
+	 Monotone + coercive + hemicontinuous operator $\Rightarrow$ existence of solution
+	\normalsize
+	\item \textbf{Leray-Lions:} For operators $A(x,u,\nabla u)$ with appropriate growth and monotonicity conditions
+\end{itemize}
+
+\subsubsection{Regularity Results}
+\begin{itemize}
+	\item \textbf{Boundedness:}\\ Weak solutions of $-\Delta_{p(x)} u = f$ with $f \in L^{p'(\cdot)}(\Omega)$ are bounded
+	\item \textbf{Hölder continuity:}\\ Under log-Hölder condition on $p$, solutions $u \in C^{0,\alpha}_{\text{loc}}(\Omega)$
+	\item \textbf{Higher regularity:} If $p \in C^{0,\alpha}$, then $u \in C^{1,\alpha}_{\text{loc}}(\Omega)$
+	\item \textbf{Harnack inequality:} For nonnegative solutions,
+	$$\sup_{B_R} u \leq C\inf_{B_R} u$$
+	\item \textbf{Caccioppoli estimate:}
+	$$\int_{B_R} |\nabla u|^{p(x)} dx \leq \frac{C}{R^{p^+}} \int_{B_{2R}} |u|^{p(x)} dx + C\int_{B_{2R}} |f|^{p'(x)} dx$$
+\end{itemize}
+
+\subsection{Eigenvalue Problems}
+
+\begin{itemize}
+	\item \textbf{First eigenvalue:}
+	$$\lambda_1 = \inf\left\{\frac{\int_\Omega |\nabla u|^{p(x)} dx}{\int_\Omega |u|^{p(x)} dx} : u \in W^{1,p(\cdot)}_0(\Omega)\setminus\{0\}\right\}$$
+	
+	\item \textbf{Eigenvalue problem:} $-\Delta_{p(x)} u = \lambda |u|^{p(x)-2} u$
+	
+	\item \textbf{Properties:}
+	\begin{itemize}
+		\item $\lambda_1 > 0$ for bounded $\Omega$
+		\item $\lambda_1$ is simple (under additional conditions)
+		\item Eigenfunction $u_1$ can be chosen positive
+		\item $\lambda_1$ is isolated
+	\end{itemize}
+\end{itemize}
+
+\subsection{Evolution Equations}
+
+\subsubsection{Parabolic $p(x)$-Laplacian}
+\begin{itemize}
+	\item \textbf{Equation:} $u_t - \Delta_{p(x)} u = f(x,t)$
+	\item \textbf{Energy estimate:}
+	$$\frac{1}{2}\frac{d}{dt}\|u\|_{L^2}^2 + \int_\Omega |\nabla u|^{p(x)} dx \leq \int_\Omega f u dx$$
+	\item \textbf{Finite time extinction:}\\ If $p^- < 2$, then $\exists T^*$ such that $u(x,t) \equiv 0$ for $t \geq T^*$
+	\item \textbf{Exponential decay:} If $p^- \geq 2$, then $\|u(t)\|_{L^2} \leq Ce^{-\gamma t}$
+\end{itemize}
+
+\subsubsection{Hyperbolic $p(x)$-Laplacian}
+\begin{itemize}
+	\item \textbf{Equation:} $u_{tt} - \Delta_{p(x)} u = f(x,t)$
+	
+	\item \textbf{Energy conservation:}\\ $E(t) = \frac{1}{2}\|u_t\|_{L^2}^2 + \int_\Omega \frac{1}{p(x)}|\nabla u|^{p(x)} dx$ satisfies $E'(t) \leq 0$
+\end{itemize}
+
+\subsection{Measure and Integration Theorems}
+
+\begin{itemize}
+	\item \textbf{Chebyshev inequality:} $\mu(\{x: |f(x)| \geq \lambda\}) \leq \frac{1}{\lambda}\int_\Omega |f| d\mu$
+	
+	\item \textbf{Fatou lemma:} $\int_\Omega \liminf_{n\to\infty} f_n d\mu \leq \liminf_{n\to\infty} \int_\Omega f_n d\mu$
+	
+	\item \textbf{Dominated convergence:}\\ $|f_n| \leq g \in L^1$ and $f_n \to f$ a.e. $\Rightarrow \int f_n \to \int f$
+	
+	\item \textbf{Monotone convergence:} $0 \leq f_n \nearrow f \Rightarrow \int f_n \nearrow \int f$
+	
+	\item \textbf{Egorov theorem:}\\ $f_n \to f$ a.e. $\Rightarrow \forall\epsilon>0, \exists E: \mu(E)<\epsilon, f_n\rightrightarrows f$ on $E^c$
+	
+	\item \textbf{Lusin theorem:}\\ $f$ measurable $\Rightarrow \forall\epsilon>0, \exists g$ continuous: $\mu(\{f\neq g\})<\epsilon$
+	
+	\item \textbf{Vitali convergence:}\\ $f_n \to f$ a.e. + uniform integrability $\Rightarrow f_n \to f$ in $L^1$
+\end{itemize}
+
+\subsection{Functional Analysis Results}
+
+\begin{itemize}
+	\item \textbf{Hahn-Banach:} Linear functional on subspace with norm bound extends to whole space
+	
+	\item \textbf{Banach-Alaoglu:} Closed unit ball in $X^*$ is weak* compact
+	
+	\item \textbf{Uniform convexity:} $L^{p(\cdot)}$ uniformly convex for $1 < p^- \leq p^+ < \infty$
+	
+	\item \textbf{Milman-Pettis:} Uniformly convex Banach space is reflexive
+	
+	\item \textbf{Closed Graph:} Linear operator with closed graph is bounded
+	
+	\item \textbf{Banach Fixed Point:} Contraction mapping has unique fixed point
+\end{itemize}
+
+\subsection{Maximum Principles}
+
+\begin{itemize}
+	\item \textbf{Weak maximum principle:}\\ $-\Delta_{p(x)} u \geq 0$ and $u|_{\partial\Omega} \geq 0 \Rightarrow u \geq 0$ in $\Omega$
+	
+	\item \textbf{Strong maximum principle:}\\ $-\Delta_{p(x)} u \geq 0$, $u \geq 0$, $u \not\equiv 0 \Rightarrow u > 0$ in $\Omega$
+	
+	\item \textbf{Hopf lemma:} $u > 0$ in $\Omega$, $u(x_0)=0$ for $x_0\in\partial\Omega \Rightarrow \frac{\partial u}{\partial\nu}(x_0) < 0$
+	
+	\item \textbf{Comparison principle:}\\ $-\Delta_{p(x)} u \leq -\Delta_{p(x)} v$ and $u|_{\partial\Omega} \leq v|_{\partial\Omega} \Rightarrow u \leq v$ in $\Omega$
+\end{itemize}
+
+\subsection{Compactness Criteria}
+
+\begin{itemize}
+	\item \textbf{Arzelà-Ascoli:}\\ $A \subset C(K)$ precompact $\Leftrightarrow$ uniformly bounded and equicontinuous
+	
+	\item \textbf{Kolmogorov-Riesz:}\\ $A \subset L^p(\mathbb{R}^n)$ precompact $\Leftrightarrow$\\ bounded + translation continuity + decay at infinity
+	
+	\item \textbf{Fréchet-Kolmogorov:} \\ $A \subset L^p$ precompact $\Leftrightarrow$ $\sup_{f\in A} \|f(\cdot+h)-f\|_p \to 0$ as $h\to 0$
+	
+	\item \textbf{Dunford-Pettis:} $A \subset L^1$ weakly compact $\Leftrightarrow$ uniformly integrable
+	
+	\item \textbf{Eberlein-Šmulian:}\\ $A \subset X$ weakly compact $\Leftrightarrow$ weakly sequentially compact
+\end{itemize}
+
+\subsection{Riesz Theorems}
+
+\begin{itemize}
+	\item \textbf{Riesz-Fischer Theorem:}\\ $L^p(\Omega)$ is a complete metric space for $1 \leq p \leq \infty$.
+	
+	\item \textbf{Riesz Representation Theorem ($L^p$):} For $1 < p < \infty$, 
+	$$(L^p(\Omega))^* \cong L^{p'}(\Omega), \quad \text{where } \frac{1}{p} + \frac{1}{p'} = 1.$$
+	Every continuous linear functional $\phi \in (L^p)^*$ has the form
+	$$\phi(f) = \int_\Omega f g \, d\mu \quad \text{for some unique } g \in L^{p'},$$
+	with $\|\phi\| = \|g\|_{p'}$.
+	
+	\item \textbf{Riesz-Markov-Kakutani Theorem ($C_0$):} For locally compact Hausdorff space $X$,
+	$$(C_0(X))^* \cong \mathcal{M}(X),$$
+	where $\mathcal{M}(X)$ are finite complex Radon measures on $X$.
+	
+	\item \textbf{Riesz-Thorin Interpolation Theorem:} Let $T: L^{p_0} \cap L^{p_1} \to L^{q_0} \cap L^{q_1}$ be linear with
+	$$\|Tf\|_{q_i} \leq M_i \|f\|_{p_i}, \quad i = 0,1.$$
+	Then for $\theta \in (0,1)$ and
+	$$\frac{1}{p_\theta} = \frac{1-\theta}{p_0} + \frac{\theta}{p_1}, \quad \frac{1}{q_\theta} = \frac{1-\theta}{q_0} + \frac{\theta}{q_1},$$
+	we have $\|Tf\|_{q_\theta} \leq M_0^{1-\theta} M_1^\theta \|f\|_{p_\theta}$.
+	
+	\item \textbf{Riesz Potential (Hardy-Littlewood-Sobolev):} For $0 < \alpha < n$,
+	$$I_\alpha f(x) = \int_{\mathbb{R}^n} \frac{f(y)}{|x-y|^{n-\alpha}} dy$$
+	defines a bounded operator $I_\alpha: L^p(\mathbb{R}^n) \to L^q(\mathbb{R}^n)$ when
+	$$\frac{1}{p} - \frac{1}{q} = \frac{\alpha}{n}, \quad 1 < p < \frac{n}{\alpha}.$$
+	
+	\item \textbf{Riesz Transform:} For $j = 1,\dots,n$,
+	$$R_j f(x) = \lim_{\epsilon \to 0} \frac{\Gamma\left(\frac{n+1}{2}\right)}{\pi^{(n+1)/2}} \int_{|x-y|>\epsilon} \frac{x_j - y_j}{|x-y|^{n+1}} f(y) dy$$
+	is bounded on $L^p(\mathbb{R}^n)$ for $1 < p < \infty$, with $\|R_j f\|_p \leq C_p \|f\|_p$.
+	
+	\item \textbf{Riesz-Schauder Theorem:} For a compact linear operator $T: X \to X$ on a Banach space,
+	\begin{itemize}
+		\item $\sigma(T) \setminus \{0\}$ consists of eigenvalues
+		\item Each nonzero eigenvalue has finite multiplicity
+		\item $0$ is the only possible accumulation point of $\sigma(T)$
+	\end{itemize}
+	
+	\item \textbf{Riesz Lemma:} For a proper closed subspace $Y$ of a normed space $X$ and $\theta \in (0,1)$,
+	$\exists x \in X$ with $\|x\| = 1$ and $\text{dist}(x, Y) \geq \theta$.
+	
+	\item \textbf{Riesz Mean Value Theorem:}\\ For $f, g \in C[a,b]$ with $g \geq 0$ and $\int_a^b g > 0$,
+	$$\exists \xi \in (a,b): \int_a^b f(t)g(t) dt = f(\xi) \int_a^b g(t) dt.$$
+	
+	\item \textbf{Riesz-Fréchet-Kolmogorov Compactness Criterion:} For $A \subset L^p(\mathbb{R}^n)$,
+	$A$ is precompact iff:
+	\begin{enumerate}
+		\item $\sup_{f \in A} \|f\|_p < \infty$
+		\item $\lim_{h \to 0} \sup_{f \in A} \|f(\cdot+h) - f\|_p = 0$
+		\item $\lim_{R \to \infty} \sup_{f \in A} \|f\|_{L^p(\mathbb{R}^n \setminus B_R)} = 0$
+	\end{enumerate}
+	
+	\item \textbf{Riesz Rearrangement Inequality:}\\ For nonnegative measurable $f,g,h: \mathbb{R}^n \to \mathbb{R}$,
+	$$\int_{\mathbb{R}^n} \int_{\mathbb{R}^n} f(x)g(x-y)h(y) dx dy \leq \int_{\mathbb{R}^n} \int_{\mathbb{R}^n} f^*(x)g^*(x-y)h^*(y) dx dy,$$
+	where $f^*$ denotes symmetric decreasing rearrangement.
+\end{itemize}
+
+\subsection{Numerical Approximation}
+
+\begin{itemize}
+	\item \textbf{Finite difference:} 
+	$$-\frac{1}{h}\left[\left|\frac{u_{i+1}-u_i}{h}\right|^{p_i-2}\frac{u_{i+1}-u_i}{h} - \left|\frac{u_i-u_{i-1}}{h}\right|^{p_{i-1}-2}\frac{u_i-u_{i-1}}{h}\right] = f_i$$
+	
+	\item \textbf{Finite element:} Find $u_h \in V_h$ such that
+	$$\forall v_h \in V_h:\quad \int_\Omega |\nabla u_h|^{p(x)-2}\nabla u_h \cdot \nabla v_h dx = \int_\Omega f v_h dx \quad $$
+	
+	\item \textbf{Convergence:} $\|u - u_h\|_{W^{1,p(\cdot)}} \leq Ch^\alpha$ under suitable conditions
+\end{itemize}
+
+\subsection{Special Cases and Phenomena}
+
+\begin{itemize}
+	\item \textbf{Constant exponent:}\\ $p(x) \equiv$ constant recovers classical $L^p$ and $W^{1,p}$ theory
+	
+	\item \textbf{Piecewise constant:}\\ $p$ takes finitely many constant values on partition of $\Omega$
+	
+	\item \textbf{Radial symmetry:} $p(x) = p(|x|)$ and $u(x) = u(|x|)$
+	
+	\item \textbf{Lavrentiev phenomenon:} $\inf_{W^{1,\infty}} J \neq \inf_{W^{1,p(\cdot)}} J$ possible
+	
+	\item \textbf{Non-homogeneity:} $\|\lambda u\|_{p(\cdot)} \neq |\lambda|\|u\|_{p(\cdot)}$ in general
+	
+	\item \textbf{Modular convergence:} $u_n \to u$ in $L^{p(\cdot)}$ $\Leftrightarrow$ $\rho_{p(\cdot)}(u_n-u) \to 0$
+\end{itemize}
+
+\subsection{Algebraic and Calculus Inequalities}
+
+\begin{itemize}
+	\item \textbf{Jensen:} $\phi(\int f d\mu) \leq \int \phi(f) d\mu$ for convex $\phi$
+	
+	\item \textbf{Young (convolution):} $\|f*g\|_r \leq \|f\|_p \|g\|_q$ with $\frac{1}{p}+\frac{1}{q}=1+\frac{1}{r}$
+	
+	\item \textbf{Minkowski (integral):} $\|\int f(\cdot,y) dy\|_p \leq \int \|f(\cdot,y)\|_p dy$
+	
+	\item \textbf{Grönwall:} $y'(t) \leq \alpha(t)y(t)+\beta(t) \Rightarrow y(t) \leq y(a)e^{\int_a^t \alpha} + \int_a^t \beta(s)e^{\int_s^t \alpha} ds$
+	
+	\item \textbf{Mean value inequality:} $|a^p - b^p| \leq p\max(|a|,|b|)^{p-1}|a-b|$
+\end{itemize}
+
+\subsection{Topological Tools}
+
+\begin{itemize}
+	\item \textbf{Partition of unity}: $\{\varphi_i\}$ smooth, $\sum \varphi_i \equiv 1$, $\operatorname{supp}\varphi_i \subset U_i$
+	\item \textbf{Urysohn's Lemma}: $A \cap B = \emptyset \Rightarrow \exists f: X \to [0,1]$, $f|_A = 0$, $f|_B = 1$
+	\item \textbf{Tietze Extension}: $f \in C(A) \Rightarrow \exists \tilde{f} \in C(X)$ with $\tilde{f}|_A = f$
+	\item \textbf{Vitali Covering}: $\exists \{\mathcal{B}_i\}$ disjoint balls, $m^*(E \setminus \cup_i \mathcal{B}_i) = 0$
+\end{itemize}
+
+\subsection{Convolution and Approximation}
+
+\begin{itemize}
+	\item \textbf{Mollifiers:} $\varphi_\epsilon * f \to f$ in $L^p$ and $\nabla(\varphi_\epsilon * f) = \varphi_\epsilon * \nabla f$ for $f \in W^{1,p}$
+	
+	\item \textbf{Convolution properties:}\\ $\|f*g\|_p \leq \|f\|_1\|g\|_p$,\qquad $\text{supp}(f*g) \subset \text{supp}(f) + \text{supp}(g)$
+\end{itemize}
+
+\subsection{Measure Decomposition}
+
+\begin{itemize}
+	\item \textbf{Lebesgue decomposition:} $\mu = \mu_a + \mu_s$ with $\mu_a \ll \nu$, $\mu_s \perp \nu$
+	
+	\item \textbf{Radon-Nikodym:} $\mu \ll \nu \Rightarrow \exists f: d\mu = f d\nu$
+	
+	\item \textbf{Hahn decomposition:}\\ $\mu = \mu^+ - \mu^-$ with disjoint positive and negative sets
+\end{itemize}
+
+
+\section{Proof tables of some results}\label{sec:proof-tables}
+
+% Set smaller font for appendix tables
+\begingroup
+\fontsize{12}{14}\selectfont
+
+% ============================================
+% 1. COMPLETENESS OF L^{p(·)}(Ω)
+% ============================================
+
+\begin{theorem}[Completeness]\label{thm:completeness}
+	$L^{p(\cdot)}(\Omega)$ is a Banach space under the Luxemburg norm.
+\end{theorem}
+
+\begin{theorem}[Reflexivity]\label{thm:reflexivity}
+	If $1 < p^- \leq p^+ < \infty$, then $L^{p(\cdot)}(\Omega)$ is reflexive.
+\end{theorem}
+
+\begin{theorem}[Separability]\label{thm:separability}
+	If $p^+ < \infty$, then $L^{p(\cdot)}(\Omega)$ is separable.
+\end{theorem}
+
+\begin{theorem}[Generalized Hölder Inequality]\label{thm:holder}
+	For $f \in L^{p(\cdot)}(\Omega)$, $g \in L^{q(\cdot)}(\Omega)$, we have:
+	$\|fg\|_{s(\cdot)} \leq 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}$
+\end{theorem}
+
+\begin{definition}[Log-Hölder Continuity]\label{def:log-holder}
+	$|p(x) - p(y)| \leq \frac{C}{\log(e + 1/|x-y|)}$
+\end{definition}
+
+\begin{theorem}[Sobolev Embedding]\label{thm:sobolev-embedding}
+	If $p$ is log-Hölder continuous and $1 < p^- \leq p^+ < n$, then:
+	$W^{1,p(\cdot)}(\Omega) \hookrightarrow L^{p^*(\cdot)}(\Omega)$
+\end{theorem}
+\subsection{Proof of Theorem \ref{thm:completeness}:\,  Completeness of $L^{p(\cdot)}(\Omega)$}
+
+\begin{prooftable}
+	1 & 
+	Let $\{f_n\}_{n=1}^\infty$ be a Cauchy sequence in $L^{p(\cdot)}(\Omega)$ with respect to 
+	the Luxemburg norm $\|\cdot\|_{p(\cdot)}$. For $\epsilon > 0$, choose $N$ such that 
+	$\|f_n - f_m\|_{p(\cdot)} < \epsilon$ for $n,m \geq N$. &
+	Definition of Cauchy sequence \\
+	
+	2 &
+	By the unit ball property, $\rho_{p(\cdot)}\bigl(\frac{f_n - f_m}{\epsilon}\bigr) \leq 1$ 
+	for $n,m \geq N$, where $\rho_{p(\cdot)}(f) = \int_\Omega |f(x)|^{p(x)}dx$ is the modular. &
+	Equivalence: $\|f\|_{p(\cdot)} < 1$ iff $\rho_{p(\cdot)}(f) \leq 1$ \\
+	
+	3 &
+	Since $\rho_{p(\cdot)}\bigl(\frac{f_n - f_m}{\epsilon}\bigr) \leq 1$, we have 
+	$\int_\Omega |f_n(x) - f_m(x)|^{p(x)}dx \leq \epsilon^{p^+} + \epsilon^{p^-}$ for $n,m \geq N$. &
+	Modular properties and bounds $p^- \leq p(x) \leq p^+$ \\
+	
+	4 &
+	Thus $\{f_n\}$ is Cauchy in measure: For any $\delta > 0$, 
+	$\mu(\{x: |f_n(x) - f_m(x)| > \delta\}) \to 0$ as $n,m \to \infty$. &
+	Chebyshev's inequality applied to step 3 \\
+	
+	5 &
+	By completeness of convergence in measure, there exists a measurable function $f$ 
+	and a subsequence $\{f_{n_k}\}$ such that $f_{n_k} \to f$ almost everywhere. &
+	Riesz theorem: Cauchy in measure implies a.e. convergent subsequence \\
+	
+	6 &
+	For fixed $m \geq N$ and $k$ large, apply Fatou's lemma to $|f_{n_k} - f_m|^{p(x)}$:
+	$\int_\Omega |f(x) - f_m(x)|^{p(x)}dx \leq \liminf\limits_{k\to\infty} \int_\Omega |f_{n_k}(x) - f_m(x)|^{p(x)}dx$. &
+	Fatou's lemma for variable exponent integrals \\
+	
+	7 &
+	From step 3, the right side is bounded by $\epsilon^{p^+} + \epsilon^{p^-}$, so
+	$\rho_{p(\cdot)}\bigl(\frac{f - f_m}{\epsilon}\bigr) \leq 1$ for $m \geq N$. &
+	Monotonicity of the modular \\
+	
+	8 &
+	Therefore $\|f - f_m\|_{p(\cdot)} \leq \epsilon$ for $m \geq N$, showing 
+	$f_m \to f$ in $L^{p(\cdot)}(\Omega)$. &
+	Converse unit ball property \\
+	
+	9 &
+	Finally, $f \in L^{p(\cdot)}(\Omega)$ since $\|f\|_{p(\cdot)} \leq \|f - f_N\|_{p(\cdot)} + \|f_N\|_{p(\cdot)} < \infty$. &
+	Triangle inequality and $f_N \in L^{p(\cdot)}(\Omega)$ \\
+	
+	10 &
+	Thus every Cauchy sequence converges in $L^{p(\cdot)}(\Omega)$, proving Theorem \ref{thm:completeness}. &
+	Definition of completeness \\
+\end{prooftable}
+
+% ============================================
+% 2. REFLEXIVITY THEOREM
+% ============================================
+\subsection{Proof of Theorem \ref{thm:reflexivity}:\,  Reflexivity of Variable Exponent Spaces}
+
+\begin{prooftable}
+	1 & 
+	\textbf{Setup:} Let $1 < p^- \leq p^+ < \infty$, $\Omega \subset \mathbb{R}^n$ measurable.
+	Consider $X = L^{p(\cdot)}(\Omega)$ with Luxemburg norm $\|f\|_{X} = \inf\{\lambda > 0 : \rho(f/\lambda) \leq 1\}$
+	where $\rho(f) = \int_\Omega |f(x)|^{p(x)} dx$ is the modular. &
+	Definitions of variable Lebesgue space and norm \\
+	
+	2 &
+	\textbf{Step 1 - Uniform convexity setup:} We prove $X$ is uniformly convex: For every
+	$0 < \epsilon \leq 2$, there exists $\delta(\epsilon) > 0$ such that for all
+	$f, g \in X$ with $\|f\|_X = \|g\|_X = 1$ and $\|f - g\|_X \geq \epsilon$, we have
+	$\left\|\frac{f+g}{2}\right\|_X \leq 1 - \delta(\epsilon)$. &
+	Definition of uniform convexity \\
+	
+	3 &
+	Let $f, g \in X$ with $\|f\|_X = \|g\|_X = 1$. By the unit ball property,
+	$\rho(f) \leq 1$ and $\rho(g) \leq 1$. &
+	Characterization: $\|h\|_X \leq 1 \Leftrightarrow \rho(h) \leq 1$ \\
+	
+	4 &
+	\textbf{Lemma 1 (Clarkson-type inequality):} $\forall$\, $f, g \in X$:
+	$\rho\bigl(\frac{f+g}{2}\bigr) + \rho\bigl(\frac{f-g}{2}\bigr) \leq \frac{1}{2}\rho(f) + \frac{1}{2}\rho(g)$. &
+	Variable exponent Clarkson inequality \\
+	
+	5 &
+	Apply Lemma 1 to our $f, g$: $\rho\bigl(\frac{f+g}{2}\bigr) + \rho\bigl(\frac{f-g}{2}\bigr) \leq 1$. &
+	Using $\rho(f) \leq 1$, $\rho(g) \leq 1$ from step 3 \\
+	
+	6 &
+	Apply Lemma 2 (norm-modular relationship) to $h = f - g$ with $\alpha = \epsilon$: 
+	Since $\|f - g\|_X \geq \epsilon$, we have $\rho\bigl(\frac{f-g}{\epsilon}\bigr) \geq 1$. &
+	Assumption $\|f-g\|_X \geq \epsilon$ \\
+	
+	7 &
+	\textbf{Lemma 3 (Power estimate):} For any $h \in X$ and $0 < \lambda \leq 1$:
+	$\rho(\lambda h) \geq \lambda^{p^+} \rho(h)$ where $p^+ = \text{ess sup}_{x\in\Omega} p(x)$. &
+	Convexity inequality for power functions \\
+	
+	8 &
+	Apply Lemma 3 with $h = \frac{f-g}{\epsilon}$ and $\lambda = \frac{\epsilon}{2}$:
+	$\rho\bigl(\frac{f-g}{2}\bigr) \geq \bigl(\frac{\epsilon}{2}\bigr)^{p^+}$. &
+	Take $\lambda = \epsilon/2 \leq 1$ \\
+	
+	9 &
+	From step 5: $\rho\bigl(\frac{f+g}{2}\bigr) \leq 1 - \bigl(\frac{\epsilon}{2}\bigr)^{p^+}$. &
+	Inequality rearrangement \\
+	
+	10 &
+	\textbf{Lemma 4 (Modular to norm):} If $\rho(h) \leq 1 - \delta$ for some $0 < \delta < 1$, 
+	then $\|h\|_X \leq 1 - \frac{\delta}{p^+}$. &
+	Conversion lemma \\
+	
+	11 &
+	Apply Lemma 4 to $h = \frac{f+g}{2}$: $\left\|\frac{f+g}{2}\right\|_X \leq 1 - \frac{1}{p^+}\bigl(\frac{\epsilon}{2}\bigr)^{p^+}$. &
+	Final norm estimate \\
+	
+	12 &
+	Define $\delta(\epsilon) = \frac{1}{p^+}\bigl(\frac{\epsilon}{2}\bigr)^{p^+} > 0$.
+	Thus $X$ is uniformly convex. &
+	Uniform convexity proven \\
+	
+	13 &
+	\textbf{Step 2 - Milman-Pettis theorem:} Every uniformly convex Banach space is reflexive. &
+	Milman-Pettis theorem \\
+	
+	14 &
+	Since $X = L^{p(\cdot)}(\Omega)$ is uniformly convex, it is reflexive. &
+	Combining results \\
+	
+	15 &
+	\textbf{Corollary:} $W^{1,p(\cdot)}(\Omega)$ inherits reflexivity as a closed subspace. &
+	Inheritance by closed subspaces \\
+	
+	16 &
+	Thus Theorem \ref{thm:reflexivity} is proved. &
+	Conclusion \\
+\end{prooftable}
+
+% ============================================
+% 3. SEPARABILITY OF L^{p(·)}(Ω) WHEN p⁺ < ∞
+% ============================================
+\subsection{Proof of Theorem \ref{thm:separability}:\,  Separability of $L^{p(\cdot)}(\Omega)$ for $p^+ < \infty$}
+
+\begin{prooftable}
+	1 & 
+	Assume $p^+ < \infty$. Let $\mathcal{S}$ be the set of simple functions of the form
+	$s(x) = \sum\limits_{i=1}^n a_i \chi_{E_i}(x)$ where $a_i \in \mathbb{Q} + i\mathbb{Q}$ and 
+	$E_i$ are measurable sets with finite measure. &
+	Definition of simple functions \\
+	
+	2 &
+	For any $f \in L^{p(\cdot)}(\Omega)$ and $\epsilon > 0$, by Luzin's theorem there exists 
+	a continuous function $g$ with compact support such that 
+	$\mu(\{x: f(x) \neq g(x)\}) < \epsilon$ and $|g(x)| \leq \|f\|_\infty$ a.e. &
+	Luzin's theorem on approximation by continuous functions \\
+	
+	3 &
+	Since $\Omega \subset \mathbb{R}^n$ is separable, the space $C_c(\Omega)$ of continuous
+	functions with compact support is separable under the uniform norm. &
+	$\mathbb{R}^n$ is second countable \\
+	
+	4 &
+	Thus there exists a sequence of simple functions $\{s_n\}$ from $\mathcal{S}$ such that
+	$s_n \to g$ uniformly on compact subsets. &
+	Weierstrass approximation and density of rationals \\
+	
+	5 &
+	For each $n$, $\|g - s_n\|_{p(\cdot)} \leq \|g - s_n\|_\infty \cdot \|\chi_{\text{supp}(g)}\|_{p(\cdot)} \to 0$. &
+	Hölder-type inequality and uniform convergence \\
+	
+	6 &
+	Now estimate $\|f - s_n\|_{p(\cdot)} \leq \|f - g\|_{p(\cdot)} + \|g - s_n\|_{p(\cdot)}$. &
+	Triangle inequality \\
+	
+	7 &
+	The first term $\|f - g\|_{p(\cdot)}$ is small because $f$ and $g$ differ only on a set
+	of measure $\epsilon$ and $p^+ < \infty$: 
+	$\int_{\{f \neq g\}} |f-g|^{p(x)}dx \leq (2\|f\|_\infty)^{p^+}\epsilon$. &
+	Boundedness and finite exponent \\
+	
+	8 &
+	Therefore, $\mathcal{S}$ is dense in $L^{p(\cdot)}(\Omega)$, proving Theorem \ref{thm:separability}. &
+	Countable dense subset exists \\
+\end{prooftable}
+
+% ============================================
+% 4. GENERALIZED HÖLDER INEQUALITY
+% ============================================
+\subsection{Proof of Theorem \ref{thm:holder}:\,  Generalized Hölder Inequality}
+
+\begin{prooftable}
+	1 & 
+	Let $p, q, s: \Omega \to [1,\infty]$ be measurable with 
+	$\frac{1}{s(x)} = \frac{1}{p(x)} + \frac{1}{q(x)}$ a.e. For $f \in L^{p(\cdot)}(\Omega)$,
+	$g \in L^{q(\cdot)}(\Omega)$, we prove $\|fg\|_{s(\cdot)} \leq 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}$. &
+	Statement of Theorem \ref{thm:holder} \\
+	
+	2 &
+	First consider the case $\|f\|_{p(\cdot)} = \|g\|_{q(\cdot)} = 1$. Then by definition,
+	$\rho_{p(\cdot)}(f) \leq 1$ and $\rho_{q(\cdot)}(g) \leq 1$. &
+	Unit ball property of Luxemburg norm \\
+	
+	3 &
+	For each $x \in \Omega$, apply the classical Young inequality:
+	$|f(x)g(x)| \leq \frac{|f(x)|^{p(x)}}{p(x)} + \frac{|g(x)|^{q(x)}}{q(x)}$. &
+	Young's inequality: $ab \leq \frac{a^p}{p} + \frac{b^q}{q}$ \\
+	
+	4 &
+	Integrate over $\Omega$: $\int_\Omega |f(x)g(x)|dx \leq \int_\Omega \frac{|f(x)|^{p(x)}}{p(x)}dx + \int_\Omega \frac{|g(x)|^{q(x)}}{q(x)}dx$. &
+	Monotonicity of integral \\
+	
+	5 &
+	Since $p(x) \geq 1$ and $q(x) \geq 1$, we have $\frac{1}{p(x)} \leq 1$, $\frac{1}{q(x)} \leq 1$, so
+	$\int_\Omega |f(x)g(x)|dx \leq \rho_{p(\cdot)}(f) + \rho_{q(\cdot)}(g) \leq 2$. &
+	Bounds on reciprocals and step 2 \\
+	
+	6 &
+	Now for the modular: $\rho_{s(\cdot)}\bigl(\frac{fg}{2}\bigr) = \int_\Omega \left|\frac{f(x)g(x)}{2}\right|^{s(x)}dx$. &
+	Definition of modular \\
+	
+	7 &
+	Since $s(x) \geq 1$, the function $t \mapsto t^{s(x)}$ is convex, so
+	$\left|\frac{f(x)g(x)}{2}\right|^{s(x)} \leq \frac{1}{2}|f(x)g(x)|^{s(x)} \cdot 1^{s(x)}$. &
+	Jensen's inequality for convex functions \\
+	
+	8 &
+	But $|f(x)g(x)|^{s(x)} = |f(x)|^{s(x)}|g(x)|^{s(x)} \leq \frac{|f(x)|^{p(x)}}{p(x)} + \frac{|g(x)|^{q(x)}}{q(x)}$,
+	since $\frac{s(x)}{p(x)} + \frac{s(x)}{q(x)} = 1$. &
+	Young's inequality with exponents $p(x)/s(x)$ and $q(x)/s(x)$ \\
+	
+	9 &
+	Integrating gives $\rho_{s(\cdot)}\bigl(\frac{fg}{2}\bigr) \leq \frac{1}{2}(\rho_{p(\cdot)}(f) + \rho_{q(\cdot)}(g)) \leq 1$. &
+	Linearity of integral and step 2 \\
+	
+	10 &
+	Thus $\|fg\|_{s(\cdot)} \leq 2$ when $\|f\|_{p(\cdot)} = \|g\|_{q(\cdot)} = 1$. &
+	Definition of Luxemburg norm from modular \\
+	
+	11 &
+	For general $f, g \neq 0$, apply step 10 to $\tilde{f} = f/\|f\|_{p(\cdot)}$ and 
+	$\tilde{g} = g/\|g\|_{q(\cdot)}$: $\|\tilde{f}\tilde{g}\|_{s(\cdot)} \leq 2$. &
+	Homogeneity of norms \\
+	
+	12 &
+	Therefore $\|fg\|_{s(\cdot)} \leq 2\|f\|_{p(\cdot)}\|g\|_{q(\cdot)}$, proving Theorem \ref{thm:holder}. &
+	Algebraic manipulation \\
+\end{prooftable}
+
+% ============================================
+% 5. LOG-HÖLDER CONDITION AND DENSITY
+% ============================================
+\subsection{Density of Smooth Functions under Definition \ref{def:log-holder}}
+
+\begin{prooftable}
+	1 & 
+	Assume $p: \Omega \to (1,\infty)$ satisfies Definition \ref{def:log-holder}:\,  
+	$|p(x)-p(y)| \leq \frac{C}{-\log|x-y|}$ for $|x-y| < 1/2$. &
+	Definition \ref{def:log-holder} of log-Hölder continuity \\
+	
+	2 &
+	Let $f \in W^{1,p(\cdot)}(\Omega)$ and $\epsilon > 0$. Extend $f$ to $\mathbb{R}^n$ by
+	zero outside $\Omega$ to get $\tilde{f} \in W^{1,p(\cdot)}(\mathbb{R}^n)$. &
+	Zero extension theorem for variable exponent spaces \\
+	
+	3 &
+	Consider the standard mollifier $\varphi_\delta(x) = \delta^{-n}\varphi(x/\delta)$ where
+	$\varphi \in C_c^\infty(\mathbb{R}^n)$, $\varphi \geq 0$, $\int \varphi = 1$. &
+	Definition of mollifier \\
+	
+	4 &
+	Define $f_\delta = \tilde{f} * \varphi_\delta$. Then $f_\delta \in C^\infty(\mathbb{R}^n)$ and 
+	$f_\delta \to \tilde{f}$ in $L^{p(\cdot)}_{loc}(\mathbb{R}^n)$. &
+	Properties of convolution and mollification \\
+	
+	5 &
+	The key estimate: $\|\nabla f_\delta\|_{L^{p(\cdot)}(\Omega)} \leq C\|\nabla f\|_{L^{p(\cdot)}(\Omega)}$
+	with $C$ independent of $\delta$ for small $\delta > 0$. &
+	Young's inequality for convolution in variable exponent spaces \\
+	
+	6 &
+	This uses Definition \ref{def:log-holder} crucially: For convolution kernels, 
+	$\|\varphi_\delta\|_{L^{p(\cdot)}(\mathbb{R}^n)} \leq C\delta^{-n/p^-} + C\delta^{-n/p^+}$. &
+	Norm estimates for mollifiers in variable $L^p$ \\
+	
+	7 &
+	Since $p$ satisfies Definition \ref{def:log-holder}, the exponents behave nicely as $\delta \to 0$,
+	allowing uniform bounds. &
+	Definition \ref{def:log-holder} prevents oscillations that would break estimates \\
+	
+	8 &
+	Thus $\{f_\delta\}$ is bounded in $W^{1,p(\cdot)}(\Omega)$, so by Theorem \ref{thm:reflexivity},
+	there exists a subsequence weakly convergent in $W^{1,p(\cdot)}(\Omega)$. &
+	Banach-Alaoglu theorem in reflexive spaces \\
+	
+	9 &
+	The weak limit must be $f$ since $f_\delta \to f$ in $L^{p(\cdot)}(\Omega)$. &
+	Uniqueness of weak limits \\
+	
+	10 &
+	For the gradient: $\nabla f_\delta = (\nabla \tilde{f}) * \varphi_\delta \rightharpoonup \nabla f$
+	weakly in $L^{p(\cdot)}(\Omega)$ as $\delta \to 0$. &
+	Properties of distributional derivatives and convolution \\
+	
+	11 &
+	Finally, $C_c^\infty(\Omega)$ is dense in $W^{1,p(\cdot)}(\Omega)$ under Definition \ref{def:log-holder}. &
+	Combination of steps 8-10 and approximation by $C_c^\infty$ functions \\
+\end{prooftable}
+
+% ============================================
+% 6. SOBOLEV EMBEDDING THEOREM
+% ============================================
+\subsection{Proof of Theorem \ref{thm:sobolev-embedding}:\,  Sobolev Embedding\\ $W^{1,p(\cdot)}_0(\Omega) \hookrightarrow L^{p^*(\cdot)}(\Omega)$}
+
+\begin{prooftable}
+	1 &
+	Assume $\Omega \subset \mathbb{R}^n$ bounded, $p$ satisfies Definition \ref{def:log-holder} with
+	$1 < p^- \leq p^+ < n$. Define Sobolev conjugate $p^*(x) = \frac{np(x)}{n-p(x)}$. &
+	Definition of Sobolev conjugate exponent \\
+	
+	2 &
+	First prove for $u \in C_c^1(\Omega)$: $\|u\|_{L^{p^*(\cdot)}(\Omega)} \leq C\|\nabla u\|_{L^{p(\cdot)}(\Omega)}$. &
+	Sobolev inequality for smooth functions \\
+	
+	3 &
+	Use the classical Sobolev inequality pointwise: For each $x$, if $p(x)$ were constant,
+	$|u(x)| \leq C(n,p)|\nabla u|_{L^{p(x)}}$ in appropriate sense. &
+	Classical Sobolev inequality \\
+	
+	4 &
+	The challenge: $p(x)$ varies. Use localization: Cover $\Omega$ with balls $B_i$ of radius $r_i$
+	such that on each $B_i$, $\sup_{x,y \in B_i} |p(x)-p(y)| < \epsilon$. &
+	Vitali covering lemma and continuity of $p$ \\
+	
+	5 &
+	On each ball $B_i$, apply constant exponent Sobolev inequality with exponent $p_i = \inf\limits_{B_i} p(x)$:
+	$\|u\|_{L^{p_i^*}(B_i)} \leq C(n,p_i)\|\nabla u\|_{L^{p_i}(B_i)}$. &
+	Local constant exponent inequality \\
+	
+	6 &
+	Since $p$ satisfies Definition \ref{def:log-holder}, $p_i^* \approx p^*(x)$ on $B_i$, specifically
+	$\frac{1}{p_i^*} - \frac{1}{p^*(x)} = O\bigl(\frac{1}{-\log r_i}\bigr)$. &
+	Definition \ref{def:log-holder} in terms of Sobolev conjugate \\
+	
+	7 &
+	Use the scaling property: For constant $p$, $\|u\|_{L^{p^*}(B_r)} \sim r^{n/p^* - n/p}\|\nabla u\|_{L^p(B_r)}$. &
+	Scaling analysis of Sobolev inequality \\
+	
+	8 &
+	Combine local estimates using partition of unity $\{\psi_i\}$ with $\sum \psi_i = 1$,
+	$\text{supp}(\psi_i) \subset B_i$: $u = \sum \psi_i u$. &
+	Partition of unity subordinate to covering \\
+	
+	9 &
+	Estimate $\|u\|_{p^*(\cdot)} \leq \sum \|\psi_i u\|_{p^*(\cdot)} \leq \sum C_i \|\nabla(\psi_i u)\|_{p(\cdot)}$. &
+	Triangle inequality and local estimates \\
+	
+	10 &
+	$\|\nabla(\psi_i u)\|_{p(\cdot)} \leq \|\nabla\psi_i \cdot u\|_{p(\cdot)} + \|\psi_i \nabla u\|_{p(\cdot)}$. &
+	Product rule for derivatives \\
+	
+	11 &
+	The first term is controlled because $\nabla\psi_i$ is supported on annulus where
+	$u$ is small (by cutoff properties). &
+	Properties of partition of unity \\
+	
+	12 &
+	The second term $\|\psi_i \nabla u\|_{p(\cdot)} \leq \|\nabla u\|_{p(\cdot)}$ since $0 \leq \psi_i \leq 1$. &
+	Monotonicity of modular with $\psi_i \leq 1$ \\
+	
+	13 &
+	Summing over $i$ gives global estimate $\|u\|_{p^*(\cdot)} \leq C\|\nabla u\|_{p(\cdot)}$. &
+	Finite covering and uniform bounds \\
+	
+	14 &
+	Extend to all $u \in W^{1,p(\cdot)}_0(\Omega)$ by density (Theorem 2.1). &
+	Density argument and continuity of norms \\
+	
+	15 &
+	Thus Theorem \ref{thm:sobolev-embedding} is proved: $W^{1,p(\cdot)}_0(\Omega) \hookrightarrow L^{p^*(\cdot)}(\Omega)$. &
+	Definition of continuous embedding \\
+\end{prooftable}
+
+% ============================================
+% 7. COMPACT EMBEDDING
+% ============================================
+\subsection{Compact Embedding using Theorem \ref{thm:sobolev-embedding}}
+
+\begin{prooftable}
+	1 &
+	Assume additional condition $p^+ < \frac{np^-}{n-p^-}$. This ensures
+	$p^*(x) > p(x) + \delta$ for some $\delta > 0$ uniformly. &
+	Condition for strict inequality between $p^*$ and $p$ \\
+	
+	2 &
+	Let $\{u_n\}$ be bounded sequence in $W^{1,p(\cdot)}_0(\Omega)$, say
+	$\|u_n\|_{1,p(\cdot)} for all $n$ \leq M$ . &
+	Bounded sequence in Sobolev space \\
+	
+	3 &
+	By Theorem \ref{thm:sobolev-embedding}, $\{u_n\}$ is bounded in $L^{p^*(\cdot)}(\Omega)$. &
+	Continuous embedding \\
+	
+	4 &
+	Use Fréchet-Kolmogorov compactness criterion: Need to show
+	$\|u_n(\cdot + h) - u_n(\cdot)\|_{L^{p(\cdot)}} \to 0$ as $|h| \to 0$ uniformly in $n$. &
+	Fréchet-Kolmogorov theorem in variable exponent spaces \\
+	
+	5 &
+	For smooth $u$, by fundamental theorem of calculus:
+	$|u(x+h) - u(x)| \leq |h| \int_0^1 |\nabla u(x+th)|dt$. &
+	Mean value inequality \\
+	
+	6 &
+	Raise to power $p(x)$ and integrate: 
+	$\int_\Omega |u(x+h)-u(x)|^{p(x)}dx \leq |h|^{p^-} \int_\Omega \bigl(\int_0^1 |\nabla u(x+th)|dt\bigr)^{p(x)}dx$. &
+	Interchange of integration \\
+	
+	7 &
+	Use Minkowski integral inequality:
+	$\left\|\int_0^1 |\nabla u(\cdot+th)|dt\right\|_{L^{p(\cdot)}} \leq \int_0^1 \||\nabla u(\cdot+th)|\|_{L^{p(\cdot)}}dt$. &
+	Minkowski inequality for variable exponent \\
+	
+	8 &
+	Since $p$ satisfies Definition \ref{def:log-holder}, translation is continuous in $L^{p(\cdot)}$:
+	$\|\nabla u(\cdot+th)\|_{L^{p(\cdot)}} \leq C\|\nabla u\|_{L^{p(\cdot)}}$. &
+	Translation invariance up to constant \\
+	
+	9 &
+	Thus $\|u(\cdot+h)-u\|_{L^{p(\cdot)}} \leq C|h|\|\nabla u\|_{L^{p(\cdot)}}$. &
+	Combining estimates \\
+	
+	10 &
+	For general $u_n \in W^{1,p(\cdot)}_0(\Omega)$, approximate by smooth functions
+	$u_{n,\epsilon} \in C_c^\infty(\Omega)$ with $\|u_n - u_{n,\epsilon}\|_{1,p(\cdot)} < \epsilon$. &
+	Density of smooth functions \\
+	
+	11 &
+	Then $\|u_n(\cdot+h)-u_n\|_{L^{p(\cdot)}} \leq \|u_n(\cdot+h)-u_{n,\epsilon}(\cdot+h)\|_{L^{p(\cdot)}} + 
+	\|u_{n,\epsilon}(\cdot+h)-u_{n,\epsilon}\|_{L^{p(\cdot)}} + \|u_{n,\epsilon}-u_n\|_{L^{p(\cdot)}}$. &
+	Triangle inequality \\
+	
+	12 &
+	First and third terms are $< \epsilon$ by approximation. Middle term is $< C|h|M$ by step 9. &
+	Estimation of each term \\
+	
+	13 &
+	Thus for $|h|$ small enough, $\|u_n(\cdot+h)-u_n\|_{L^{p(\cdot)}} < 2\epsilon$ uniformly in $n$. &
+	Choice of $h$ depending only on $\epsilon$ and $M$ \\
+	
+	14 &
+	So $\{u_n\}$ is precompact in $L^{p(\cdot)}(\Omega)$ by Fréchet-Kolmogorov. &
+	Compactness criterion satisfied \\
+	
+	15 &
+	Since $p^*(\cdot) > p(\cdot)$, interpolation gives compactness in $L^{p(\cdot)}(\Omega)$
+	implies compactness in $L^{q(\cdot)}(\Omega)$ for any $q$ with $p(x) \leq q(x) < p^*(x)$. &
+	Interpolation inequalities for variable exponents \\
+	
+	16 &
+	Therefore $W^{1,p(\cdot)}_0(\Omega) \hookrightarrow L^{q(\cdot)}(\Omega)$ compactly for
+	$p(x) \leq q(x) < p^*(x)$. &
+	Definition of compact embedding \\
+\end{prooftable}
+
+\endgroup  % End smaller font
+
+
+
+\newpage
+\begin{thebibliography}{99}
+	
+	\bibitem{Diening2011}
+	Diening, L., Harjulehto, P., H\"{a}st\"{o}, P., and R\u{u}\v{z}i\v{c}ka, M.
+	\emph{Lebesgue and Sobolev Spaces with Variable Exponents}.
+	Springer-Verlag, Berlin, 2011.
+	
+	\bibitem{Ruzicka2000}
+	R\u{u}\v{z}i\v{c}ka, M.
+	\emph{Electrorheological Fluids: Modeling and Mathematical Theory}.
+	Springer-Verlag, Berlin, 2000.
+	
+	\bibitem{Fan2015}
+	Fan, X.
+	\emph{An overview of $p(x)$-Laplace equations}.
+	Journal of Mathematical Analysis and Applications, 432(2):785--801, 2015.
+	
+	\bibitem{Antontsev2006}
+	Antontsev, S.~N. and Rodrigues, J.~F.
+	\emph{On stationary thermo-rheological viscous flows}.
+	Annali dell'Università di Ferrara, 52(1):19--36, 2006.
+	
+	\bibitem{Acerbi2007}
+	Acerbi, E. and Mingione, G.
+	\emph{Regularity results for parabolic systems related to a class of non-Newtonian fluids}.
+	Annales de l'Institut Henri Poincaré C, Analyse Non Linéaire, 24(1):1--19, 2007.
+	
+	\bibitem{Zhikov2007}
+	Zhikov, V.~V.
+	\emph{On the density of smooth functions in Sobolev-Orlicz spaces}.
+	Journal of Mathematical Sciences, 143(3):3169--3184, 2007.
+		\bibitem{diening2011} Diening, L., Harjulehto, P., H\"ast\"o, P., and R\u{u}\v{z}i\v{c}ka, M. (2011). \emph{Lebesgue and Sobolev Spaces with Variable Exponents}. Springer.
+ \bibitem{github} Brahimi, M.T. \emph{PDE Repository}. GitHub. \url{https://github.com/mahditaharb-maker/PDE/}. (Accessed: 2024).
+
+	
+\end{thebibliography}
+	\makeatletter
+	\let\addcontentsline\orig@addcontentsline \makeatother
+
+\end{document}
